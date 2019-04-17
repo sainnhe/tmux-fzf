@@ -18,4 +18,4 @@ And of course, this plugin requires [fzf](https://github.com/junegunn/fzf/) to g
 
 # Usage
 
-press `prefix` + `f`, and witness the miracle.
+press `prefix` + `F`
