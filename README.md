@@ -9,7 +9,7 @@
 Suppose you are using [tpm](https://github.com/tmux-plugins/tpm/)
 
 ```tmux
-set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'sainnhe/tmux-fzf'
 ```
 
 Then press `prefix` + `I`
