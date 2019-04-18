@@ -3,8 +3,8 @@
 # Feature
 
 - Manage sessions ( attach, detach, kill, rename ).
-- Manage panes ( switch, kill, layout ).
 - Manage windows ( switch, kill, rename ).
+- Manage panes ( switch, kill, layout ).
 - Search commands and append to command prompt.
 - Search keys and execute ( exclude copy-mode keys ).
 
