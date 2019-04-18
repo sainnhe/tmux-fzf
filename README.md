@@ -30,7 +30,7 @@ This plugin will read fzf environment variables, so you can customize the behavi
 
 For more information, check [official page of fzf](https://github.com/junegunn/fzf/).
 
-In addition, this plugin supports options of `fzf-tmux` command which is [officially provided by fzf](https://github.com/junegunn/fzf#examples), you can customize them by adding something like this into `$HOME/.tmux.conf`
+In addition, this plugin supports options of `fzf-tmux` command which is [provided by fzf](https://github.com/junegunn/fzf#examples), you can customize them by adding something like this into `$HOME/.tmux.conf`
 
 ```tmux
 TMUX_FZF_OPTIONS="-d 35%"
