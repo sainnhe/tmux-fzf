@@ -3,7 +3,7 @@
 # Feature
 
 - Manage sessions(detach, kill, switch, rename).
-- Manage panes(kill, switch).
+- Manage panes(kill, switch, layout).
 - Manage windows(kill, switch, rename).
 - Search commands and append to command prompt.
 
