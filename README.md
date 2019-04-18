@@ -2,9 +2,9 @@
 
 # Feature
 
-- Manage sessions(detach, kill, switch, rename).
-- Manage panes(kill, switch, layout).
-- Manage windows(kill, switch, rename).
+- Manage sessions ( attach, detach, kill, rename ).
+- Manage panes ( switch, kill, layout ).
+- Manage windows ( switch, kill, rename ).
 - Search commands and append to command prompt.
 
 # Installation
