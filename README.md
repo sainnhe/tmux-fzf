@@ -14,13 +14,13 @@ Suppose you are using [tpm](https://github.com/tmux-plugins/tpm/), add this line
 set -g @plugin 'sainnhe/tmux-fzf'
 ```
 
-Reload config, then press `prefix` + `I`.
+Reload configuration, then press `prefix` + `I`.
 
 And of course, this plugin requires [fzf](https://github.com/junegunn/fzf/) to get it work.
 
 # Usage
 
-press `prefix` + `F`
+press `prefix` + `F` (Shift+F)
 
 # Customize
 
@@ -34,4 +34,4 @@ In addition, this plugin supports options of `fzf-tmux` command which is [offici
 TMUX_FZF_OPTIONS="-d 35%"
 ```
 
-to list all available `fzf-tmux` options, execute `fzf-tmux --help` in your shell.
+To list all available `fzf-tmux` options, execute `fzf-tmux --help` in your shell.
