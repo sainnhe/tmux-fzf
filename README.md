@@ -5,6 +5,7 @@
 - Manage sessions(detach, kill, switch)
 - Manage panes(kill, switch)
 - Manage windows(kill, switch)
+- Search command and execute
 
 # Installation
 
