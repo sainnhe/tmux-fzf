@@ -26,7 +26,7 @@ press `prefix` + `F` (Shift+F)
 
 # Customize
 
-For some reason, you may want to change key binding to launch tmux-fzf.
+For some reasons, you may want to change key binding to launch tmux-fzf.
 
 For example, to use `prefix` + `C-f` (Ctrl-F), add this line into your `$HOME/.tmux.conf`
 
