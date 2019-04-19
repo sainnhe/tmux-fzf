@@ -11,11 +11,11 @@ else
     if [[ "$ACTION" == "cancel" ]]; then
         exit
     elif [[ "$ACTION" == "attach" ]]; then
-        printf "$TARGET" | xargs tmux switch-client -t
+        echo "$TARGET" | xargs tmux switch-client -t
     elif [[ "$ACTION" == "detach" ]]; then
-        printf "$TARGET" | xargs tmux detach -s
+        echo "$TARGET" | xargs tmux detach -s
     elif [[ "$ACTION" == "kill" ]]; then
-        printf "$TARGET" | xargs tmux kill-session -t
+        echo "$TARGET" | xargs tmux kill-session -t
     elif [[ "$ACTION" == "rename" ]]; then
         tmux command-prompt -I "rename-session -t $TARGET "
     fi
