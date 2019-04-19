@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ACTION=$(printf "attach\ndetach\nkill\nrename\ncancel" | "$CURRENT_DIR/.fzf-tmux")
-if [[ "$ACTION" == "cancel" ]]; then
+ACTION=$(printf "attach\ndetach\nkill\nrename\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 else
-    TARGET_ORIGIN=$(printf "$(tmux list-sessions)\ncancel" | "$CURRENT_DIR/.fzf-tmux")
-    if [[ "$TARGET_ORIGIN" == "cancel" ]]; then
+    TARGET_ORIGIN=$(printf "$(tmux list-sessions)\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+    if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
     else
         TARGET=$(echo "$TARGET_ORIGIN" | sed -E 's/:.*$//' | grep -v \"^$(tmux display-message -p '#S')\$\")
