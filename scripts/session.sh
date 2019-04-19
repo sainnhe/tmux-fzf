@@ -5,11 +5,11 @@ ACTION=$(printf "attach\ndetach\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tm
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 else
-    TARGET_ORIGIN=$(printf "$(tmux list-sessions)\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-sessions)" | "$CURRENT_DIR/.fzf-tmux")
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
     else
-        TARGET=$(echo "$TARGET_ORIGIN" | sed -E 's/:.*$//' | grep -v \"^$(tmux display-message -p '#S')\$\")
+        TARGET=$(echo "$TARGET_ORIGIN" | sed -E 's/:.*$//')
         if [[ "$ACTION" == "attach" ]]; then
             echo "$TARGET" | xargs tmux switch-client -t
         elif [[ "$ACTION" == "detach" ]]; then

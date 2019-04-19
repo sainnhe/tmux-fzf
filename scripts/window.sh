@@ -5,7 +5,7 @@ ACTION=$(printf "switch\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 else
-    TARGET_ORIGIN=$(printf "$(tmux list-windows -a)\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-windows -a)" | "$CURRENT_DIR/.fzf-tmux")
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
     else
