@@ -26,6 +26,14 @@ press `prefix` + `F` (Shift+F)
 
 # Customize
 
+For some reason, you may want to change key binding to launch tmux-fzf.
+
+For example, to use `prefix` + `C-f` (Ctrl-F), add this line into your `$HOME/.tmux.conf`
+
+```tmux
+set -g @tmux-fzf-launch-key 'C-f'
+```
+
 This plugin will read fzf environment variables, so you can customize the behavior of fzf such as prompt and color by setting those variables.
 
 For more information, check [official page of fzf](https://github.com/junegunn/fzf/).
