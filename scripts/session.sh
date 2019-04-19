@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ACTION=$(printf "attach\ndetach\nkill\nrename\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+ACTION=$(printf "attach\ndetach\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 else
