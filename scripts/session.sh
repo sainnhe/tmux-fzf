@@ -5,7 +5,11 @@ ACTION=$(printf "attach\ndetach\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tm
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 else
-    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-sessions)" | "$CURRENT_DIR/.fzf-tmux")
+    if [[ "$ACTION" == "detach" ]]; then
+        TARGET_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-sessions)" | grep "attached" | "$CURRENT_DIR/.fzf-tmux")
+    else
+        TARGET_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-sessions)" | "$CURRENT_DIR/.fzf-tmux")
+    fi
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
     else
