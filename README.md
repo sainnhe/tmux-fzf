@@ -7,6 +7,7 @@
 - Manage panes ( switch, kill, layout ).
 - Search commands and append to command prompt.
 - Search keys and execute ( exclude copy-mode keys ).
+- Multiple selection ( kill sessions/windows/panes ).
 
 # Installation
 
@@ -22,7 +23,9 @@ And of course, this plugin requires [fzf](https://github.com/junegunn/fzf/) to g
 
 # Usage
 
-press `prefix` + `F` (Shift+F)
+To launch tmux-fzf, press `prefix` + `F` (Shift+F).
+
+This plugin supports multiple selection for `kill` action, you can press `TAB` and `Shift-TAB` to mark multiple items.
 
 # Customize
 

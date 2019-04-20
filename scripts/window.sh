@@ -11,7 +11,7 @@ else
     else
         TARGET=$(echo "$TARGET_ORIGIN" | grep -o '[[:alpha:]]*:[[:digit:]]*:' | sed 's/.$//g')
         if [[ "$ACTION" == "kill" ]]; then
-            echo "$TARGET" | xargs tmux kill-window -t
+            echo "$TARGET" | sort -r | xargs -i tmux kill-window -t {}
         elif [[ "$ACTION" == "rename" ]]; then
             tmux command-prompt -I "rename-window -t $TARGET "
         elif [[ "$ACTION" == "switch" ]]; then

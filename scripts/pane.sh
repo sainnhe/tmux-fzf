@@ -22,7 +22,7 @@ else
             echo "$TARGET" | sed -r 's/\..*//g' | xargs tmux select-window -t
             echo "$TARGET" | xargs tmux select-pane -t
         elif [[ "$ACTION" == "kill" ]]; then
-            echo "$TARGET" | xargs tmux kill-pane -t
+            echo "$TARGET" | sort -r | xargs -i tmux kill-pane -t {}
         fi
     fi
 fi
