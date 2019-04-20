@@ -5,9 +5,9 @@
 - Manage sessions ( attach, detach, kill, rename ).
 - Manage windows ( switch, kill, rename, link, unlink ).
 - Manage panes ( switch, kill, layout ).
+- Multiple selection ( kill sessions/windows/panes ).
 - Search commands and append to command prompt.
 - Search keys and execute.
-- Multiple selection ( kill sessions/windows/panes ).
 
 # Installation
 
@@ -51,7 +51,7 @@ launch tmux-fzf -> `window` -> `unlink`
 
 ## key binding
 
-For example, to use `prefix` + `C-f` (Ctrl-F), add this line into your `$HOME/.tmux.conf`
+For example, to use `prefix` + `C-f` (Ctrl+F), add this line into your `$HOME/.tmux.conf`
 
 ```tmux
 set -g @tmux-fzf-launch-key 'C-f'
