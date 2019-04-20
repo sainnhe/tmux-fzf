@@ -61,9 +61,9 @@ set -g @tmux-fzf-launch-key 'C-f'
 
 This plugin will read fzf environment variables, so you can customize the behavior of fzf such as prompt and color by setting those variables.
 
-For more information, check [official page of fzf](https://github.com/junegunn/fzf/).
+For more information, check [official page of fzf](https://github.com/junegunn/fzf/#environment-variables).
 
-In addition, this plugin supports options of `fzf-tmux` command which is [provided by fzf](https://github.com/junegunn/fzf#examples), you can customize them by adding something like this into `$HOME/.tmux.conf`
+In addition, this plugin supports options of `fzf-tmux` command which is [provided by fzf](https://github.com/junegunn/fzf#fzf-tmux-script), you can customize them by adding something like this into `$HOME/.tmux.conf`
 
 ```tmux
 TMUX_FZF_OPTIONS="-d 35%"
