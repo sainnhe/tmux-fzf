@@ -6,7 +6,7 @@
 - Manage windows ( switch, kill, rename, link, unlink ).
 - Manage panes ( switch, kill, layout ).
 - Search commands and append to command prompt.
-- Search keys and execute ( exclude copy-mode keys ).
+- Search keys and execute.
 - Multiple selection ( kill sessions/windows/panes ).
 
 # Installation
