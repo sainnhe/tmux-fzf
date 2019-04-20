@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TARGET_ORIGIN=$(tmux list-keys | sed '$a [cancel]' | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+TARGET_ORIGIN=$(tmux list-keys | sed '1i [cancel]' | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
 if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
     exit
 else
