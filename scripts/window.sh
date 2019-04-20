@@ -13,13 +13,11 @@ elif [[ "$ACTION" == "link" ]]; then
         exit
     else
         SRC_WIN=$(echo "$SRC_WIN_ORIGIN" | grep -o '[[:alpha:]]*:[[:digit:]]*:' | sed 's/.$//g')
-        DST_WIN_ORIGIN=$(printf "current\nafter\nend\nbegin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+        DST_WIN_ORIGIN=$(printf "after\nend\nbegin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
         if [[ "$DST_WIN_ORIGIN" == "[cancel]" ]]; then
             exit
         elif [[ "$DST_WIN_ORIGIN" == "after" ]]; then
             tmux link-window -a -s "$SRC_WIN" -t "$CUR_WIN"
-        elif [[ "$DST_WIN_ORIGIN" == "current" ]]; then
-            tmux link-window -k -s "$SRC_WIN" -t "$CUR_WIN"
         elif [[ "$DST_WIN_ORIGIN" == "end" ]]; then
             ((LAST_WIN_NUM=LAST_WIN_NUM+1))
             tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM"

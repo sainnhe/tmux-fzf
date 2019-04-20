@@ -33,9 +33,7 @@ You can use this plugin to link a window from another session to current session
 
 launch tmux-fzf -> `window` -> `link` -> select a window in another session -> select destination
 
-There are 4 available destinations:
-
-`current`: kill current window and link it here
+There are 3 available destinations:
 
 `after`: link it after current window
 
