@@ -29,7 +29,7 @@ This plugin supports multiple selection for `kill` action, you can press `TAB` a
 
 ## link & unlink window
 
-You can use this plugin to link a window in another session to current session.
+You can use this plugin to link a window from another session to current session.
 
 launch tmux-fzf -> `window` -> `link` -> select a window in another session -> select destination
 
