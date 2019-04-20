@@ -3,7 +3,7 @@
 # Feature
 
 - Manage sessions ( attach, detach, kill, rename ).
-- Manage windows ( switch, kill, rename ).
+- Manage windows ( switch, kill, rename, link, unlink ).
 - Manage panes ( switch, kill, layout ).
 - Search commands and append to command prompt.
 - Search keys and execute ( exclude copy-mode keys ).
@@ -26,6 +26,26 @@ And of course, this plugin requires [fzf](https://github.com/junegunn/fzf/) to g
 To launch tmux-fzf, press `prefix` + `F` (Shift+F).
 
 This plugin supports multiple selection for `kill` action, you can press `TAB` and `Shift-TAB` to mark multiple items.
+
+## link & unlink window
+
+You can use this plugin to link a window in another session to current session.
+
+launch tmux-fzf -> `window` -> `link` -> select a window in another session -> select destination
+
+There are 4 available destinations:
+
+`current`: kill current window and link it here
+
+`after`: link it after current window
+
+`end`: link it to the end
+
+`begin`: link it to the begin
+
+And you can use `unlink` action to unlink current window:
+
+launch tmux-fzf -> `window` -> `unlink`
 
 # Customize
 
