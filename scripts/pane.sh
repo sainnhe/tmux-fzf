@@ -12,11 +12,11 @@ elif [[ "$ACTION" == "layout" ]]; then
         tmux select-layout "$TARGET_ORIGIN"
     fi
 else
-    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-panes -a)" | "$CURRENT_DIR/.fzf-tmux")
+    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-panes -a  -F '#S:#{window_index}(#{window_name}).#{pane_index}: #{pane_current_command}  [#{pane_width}x#{pane_height}] [history #{history_size}/#{history_limit}, #{history_bytes} bytes] #{?pane_active,[active],[inactive]}')" | "$CURRENT_DIR/.fzf-tmux")
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
     else
-        TARGET=$(echo "$TARGET_ORIGIN" | grep -o '.*:' | sed -r 's/(.*)(.)$/\1/')
+        TARGET=$(echo "$TARGET_ORIGIN" | sed -r -e 's/\(.*\)//g' | grep -o '.*:' | sed -r 's/(.*)(.)$/\1/')
         if [[ "$ACTION" == "switch" ]]; then
             echo "$TARGET" | sed -r 's/:.*//g' | xargs tmux switch-client -t
             echo "$TARGET" | sed -r 's/\..*//g' | xargs tmux select-window -t
