@@ -6,7 +6,7 @@ if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 else
     if [[ "$ACTION" == "detach" ]]; then
-        TARGET_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-sessions)" | grep "attached" | "$CURRENT_DIR/.fzf-tmux")
+        TARGET_ORIGIN=$(tmux list-sessions | grep "attached" | sed -r '$a [cancel]' | "$CURRENT_DIR/.fzf-tmux")
     else
         TARGET_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-sessions)" | "$CURRENT_DIR/.fzf-tmux")
     fi
