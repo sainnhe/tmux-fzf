@@ -27,7 +27,7 @@ To launch tmux-fzf, press `prefix` + `F` (Shift+F).
 
 This plugin supports multiple selection for `kill` action, you can press `TAB` and `Shift-TAB` to mark multiple items.
 
-Most operations don't need to be explained, but there are some operations that might need to be explained here.
+Most actions don't need to be explained, but there are some actions that might need to be explained here.
 
 ## link & move window
 
