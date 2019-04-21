@@ -2,10 +2,10 @@
 
 # Feature
 
-- Manage sessions ( attach, detach, kill, rename ).
-- Manage windows ( switch, kill, rename, link, unlink ).
-- Manage panes ( switch, kill, layout ).
-- Multiple selection ( kill sessions/windows/panes ).
+- Manage sessions ( attach, detach*, kill*, rename ).
+- Manage windows ( switch, kill*, rename, link, unlink ).
+- Manage panes ( switch, kill*, layout, break, join* ).
+- Multiple selection ( Support for actions marked by * ).
 - Search commands and append to command prompt.
 - Search keys and execute.
 
@@ -27,6 +27,8 @@ To launch tmux-fzf, press `prefix` + `F` (Shift+F).
 
 This plugin supports multiple selection for `kill` action, you can press `TAB` and `Shift-TAB` to mark multiple items.
 
+Most operations don't need to be explained, but there are some operations that might need to be explained here.
+
 ## link & unlink window
 
 You can use this plugin to link a window from another session to current session.
@@ -37,13 +39,31 @@ There are 3 available destinations:
 
 `after`: link it after current window
 
-`end`: link it to the end
+`end`: link it to the last window in current session
 
-`begin`: link it to the begin
+`begin`: link it to the first window in current session
 
 And you can use `unlink` action to unlink current window:
 
 launch tmux-fzf -> `window` -> `unlink`
+
+## break & join pane
+
+**break** action will break source pane off from its containing window to make it the only pane in destination window.
+
+launch tmux-fzf -> `pane` -> `break` -> select source pane -> select destination
+
+There are 3 available destinations:
+
+`after`: break it after current window
+
+`end`: break it to the last window in current session
+
+`begin`: break it to the first window in current session
+
+**join** action is like split-window, but instead of splitting destination pane and creating a new pane, it will split it and move source pane into the current window. This can be used to reverse break-pane.
+
+launch tmux-fzf -> `pane` -> `join` -> select source pane(s)
 
 # Customization
 
