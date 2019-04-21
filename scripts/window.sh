@@ -27,12 +27,16 @@ elif [[ "$ACTION" == "link" ]]; then
         elif [[ "$DST_WIN_ORIGIN" == "after" ]]; then
             tmux link-window -a -s "$SRC_WIN" -t "$CUR_WIN"
         elif [[ "$DST_WIN_ORIGIN" == "end" ]]; then
-            ((LAST_WIN_NUM=LAST_WIN_NUM+1))
-            tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM"
+            ((LAST_WIN_NUM_AFTER=LAST_WIN_NUM+1))
+            tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
         elif [[ "$DST_WIN_ORIGIN" == "begin" ]]; then
-            ((LAST_WIN_NUM=LAST_WIN_NUM+1))
-            tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM"
-            tmux swap-window -s "$LAST_WIN_NUM" -t 0
+            ((LAST_WIN_NUM_AFTER=LAST_WIN_NUM+1))
+            tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
+            tmux new-window -a -t "$CUR_SES":0
+            LAST_WIN_NUM=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
+            tmux swap-window -s "$LAST_WIN_NUM" -t 1
+            tmux swap-window -s 1 -t 0
+            tmux kill-window -t "$LAST_WIN_NUM"
         fi
     fi
 elif [[ "$ACTION" == "unlink" ]]; then
