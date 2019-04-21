@@ -26,7 +26,7 @@ else
         if [[ "$ACTION" == "attach" ]]; then
             echo "$TARGET" | xargs tmux switch-client -t
         elif [[ "$ACTION" == "detach" ]]; then
-            echo "$TARGET" | xargs tmux detach -s
+            echo "$TARGET" | xargs -i tmux detach -s {}
         elif [[ "$ACTION" == "kill" ]]; then
             echo "$TARGET" | sort -r | xargs -i tmux kill-session -t {}
         elif [[ "$ACTION" == "rename" ]]; then
