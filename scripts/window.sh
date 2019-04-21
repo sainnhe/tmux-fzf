@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [[ "$TMUX_WINDOW_FORMAT"x == ""x ]]; then
+    WINDOWS=$(tmux list-windows -a)
+else
+    WINDOWS=$(tmux list-windows -a -F "#S:#{window_index}: $TMUX_WINDOW_FORMAT")
+fi
+
 ACTION=$(printf "switch\nrename\nkill\nlink\nunlink\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
@@ -8,11 +15,11 @@ elif [[ "$ACTION" == "link" ]]; then
     CUR_WIN=$(tmux display-message -p | sed -e 's/^.//' -e 's/] /:/' | grep -o '[[:alpha:]]*:[[:digit:]]*:' | sed 's/.$//g')
     CUR_SES=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')
     LAST_WIN_NUM=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
-    SRC_WIN_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-windows -a)" | grep -v "$CUR_SES" | "$CURRENT_DIR/.fzf-tmux")
+    SRC_WIN_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | grep -v "$CUR_SES" | "$CURRENT_DIR/.fzf-tmux")
     if [[ "$SRC_WIN_ORIGIN" == "[cancel]" ]]; then
         exit
     else
-        SRC_WIN=$(echo "$SRC_WIN_ORIGIN" | grep -o '[[:alpha:]]*:[[:digit:]]*:' | sed 's/.$//g')
+        SRC_WIN=$(echo "$SRC_WIN_ORIGIN" | grep -o '^[[:alpha:]]*:[[:digit:]]*:' | sed 's/.$//g')
         DST_WIN_ORIGIN=$(printf "after\nend\nbegin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
         if [[ "$DST_WIN_ORIGIN" == "[cancel]" ]]; then
             exit
@@ -31,11 +38,11 @@ elif [[ "$ACTION" == "unlink" ]]; then
     CUR_WIN=$(tmux display-message -p | sed -e 's/^.//' -e 's/] /:/' | grep -o '[[:alpha:]]*:[[:digit:]]*:' | sed 's/.$//g')
     tmux unlink-window -k -t "$CUR_WIN"
 else
-    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-windows -a)" | "$CURRENT_DIR/.fzf-tmux")
+    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux")
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
     else
-        TARGET=$(echo "$TARGET_ORIGIN" | grep -o '[[:alpha:]]*:[[:digit:]]*:' | sed 's/.$//g')
+        TARGET=$(echo "$TARGET_ORIGIN" | grep -o '^[[:alpha:]]*:[[:digit:]]*:' | sed 's/.$//g')
         if [[ "$ACTION" == "kill" ]]; then
             echo "$TARGET" | sort -r | xargs -i tmux kill-window -t {}
         elif [[ "$ACTION" == "rename" ]]; then
