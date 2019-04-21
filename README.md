@@ -45,7 +45,7 @@ And you can use `unlink` action to unlink current window:
 
 launch tmux-fzf -> `window` -> `unlink`
 
-# Customize
+# Customization
 
 ## key binding
 
@@ -73,7 +73,7 @@ To list all available `fzf-tmux` options, execute `fzf-tmux --help` in your shel
 
 For some reasons, you may want to customize format of panes, windows, sessions listed in fzf. There are three variables to complete this work:
 
-`TMUX_FZF_PANE_FORMAT` `TMUX_FZF_WINDOW_FORMAT` `TMUX_FZF_SESSION_FORMAT`
+`TMUX_FZF_PANE_FORMAT`   `TMUX_FZF_WINDOW_FORMAT`   `TMUX_FZF_SESSION_FORMAT`
 
 For example, `tmux list-panes -a` doesn't show running program and window name by default. If you want to show running program and window name, add something like this into `$HOME/.tmux.conf`
 
