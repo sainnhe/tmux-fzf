@@ -31,7 +31,7 @@ else
         elif [[ "$ACTION" == "kill" ]]; then
             echo "$TARGET" | sort -r | xargs -i tmux kill-pane -t {}
         elif [[ "$ACTION" == "join" ]]; then
-            echo "$TARGET" | sort -r | xargs -i tmux join-pane -s {}
+            echo "$TARGET" | sort -r | xargs -i tmux move-pane -s {}
         elif [[ "$ACTION" == "break" ]]; then
             DST_WIN=$(printf "after\nend\nbegin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
             CUR_WIN_NUM=$(tmux display-message -p | grep -o '[[[:alpha:]|[:digit:]]*] [[:digit:]]*:' | sed -e 's/\[.*\] //' -e 's/.$//')
