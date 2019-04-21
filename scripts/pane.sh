@@ -8,7 +8,7 @@ else
     PANES=$(tmux list-panes -a -F "#S:#{window_index}.#{pane_index}: $TMUX_FZF_PANE_FORMAT")
 fi
 
-ACTION=$(printf "switch\nbreak\njoin\nlayout\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+ACTION=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 elif [[ "$ACTION" == "layout" ]]; then
@@ -30,6 +30,15 @@ else
             echo "$TARGET" | xargs tmux select-pane -t
         elif [[ "$ACTION" == "kill" ]]; then
             echo "$TARGET" | sort -r | xargs -i tmux kill-pane -t {}
+        elif [[ "$ACTION" == "swap" ]]; then
+            PANES=$(echo "$PANES" | grep -v "^$TARGET")
+            TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            if [[ "$TARGET_SWAP_ORIGIN" == "[cancel]" ]]; then
+                exit
+            else
+                TARGET_SWAP=$(echo "$TARGET_SWAP_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*\.[[:digit:]]*:' | sed 's/.$//g')
+                tmux swap-pane -s "$TARGET" -t "$TARGET_SWAP"
+            fi
         elif [[ "$ACTION" == "join" ]]; then
             echo "$TARGET" | sort -r | xargs -i tmux move-pane -s {}
         elif [[ "$ACTION" == "break" ]]; then
@@ -37,8 +46,8 @@ else
             CUR_WIN_NUM=$(tmux display-message -p | grep -o '[[[:alpha:]|[:digit:]]*] [[:digit:]]*:' | sed -e 's/\[.*\] //' -e 's/.$//')
             CUR_SES=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')
             LAST_WIN_NUM=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
-            ((LAST_WIN_NUM_AFTER=LAST_WIN_NUM+1))
-            ((CUR_WIN_NUM_AFTER=CUR_WIN_NUM+1))
+            ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
+            ((CUR_WIN_NUM_AFTER = CUR_WIN_NUM + 1))
             if [[ "$DST_WIN" == "after" ]]; then
                 tmux break-pane -s "$TARGET" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
                 tmux new-window -a -t "$CUR_SES":"$CUR_WIN_NUM"
