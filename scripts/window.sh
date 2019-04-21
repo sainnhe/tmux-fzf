@@ -15,6 +15,7 @@ elif [[ "$ACTION" == "link" ]]; then
     CUR_WIN=$(tmux display-message -p | sed -e 's/^.//' -e 's/] /:/' | grep -o '[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | sed 's/.$//g')
     CUR_SES=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')
     LAST_WIN_NUM=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
+    WINDOWS=$(echo "$WINDOWS" | grep -v "^$CUR_SES")
     SRC_WIN_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
     if [[ "$SRC_WIN_ORIGIN" == "[cancel]" ]]; then
         exit
