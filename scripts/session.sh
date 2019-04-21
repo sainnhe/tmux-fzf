@@ -16,7 +16,7 @@ else
         TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
     else
         TMUX_DETACHED_SESSIONS=$(tmux list-sessions | grep -v 'attached' | grep -o '^[[:alpha:]|[:digit:]]*:' | sed 's/.$//g')
-        SESSIONS=$(echo "$SESSIONS" | grep -v "$TMUX_DETACHED_SESSIONS")
+        SESSIONS=$(echo "$SESSIONS" | grep -v "^$TMUX_DETACHED_SESSIONS")
         TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
     fi
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
