@@ -68,3 +68,20 @@ TMUX_FZF_OPTIONS="-d 35%"
 ```
 
 To list all available `fzf-tmux` options, execute `fzf-tmux --help` in your shell.
+
+## format
+
+For some reasons, you may want to customize format of panes, windows, sessions listed in fzf. There are three variables to complete this work:
+
+`TMUX_FZF_PANE_FORMAT` `TMUX_FZF_WINDOW_FORMAT` `TMUX_FZF_SESSION_FORMAT`
+
+For example, `tmux list-panes -a` doesn't show running program and window name by default. If you want to show running program and window name, add something like this into `$HOME/.tmux.conf`
+
+```tmux
+TMUX_FZF_PANE_FORMAT="[#{window_name}] #{pane_current_command}  [#{pane_width}x#{pane_height}] [history #{history_size}/#{history_limit}, #{history_bytes} bytes] #{?pane_active,[active],[inactive]}"
+```
+
+Similarly, `TMUX_FZF_WINDOW_FORMAT` and `TMUX_FZF_SESSION_FORMAT` can also be handled in this way.
+
+For more information, check "FORMATS" section in tmux manual.
+
