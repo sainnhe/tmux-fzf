@@ -2,10 +2,10 @@
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [[ "$TMUX_WINDOW_FORMAT"x == ""x ]]; then
+if [[ "$TMUX_FZF_WINDOW_FORMAT"x == ""x ]]; then
     WINDOWS=$(tmux list-windows -a)
 else
-    WINDOWS=$(tmux list-windows -a -F "#S:#{window_index}: $TMUX_WINDOW_FORMAT")
+    WINDOWS=$(tmux list-windows -a -F "#S:#{window_index}: $TMUX_FZF_WINDOW_FORMAT")
 fi
 
 ACTION=$(printf "switch\nrename\nkill\nlink\nunlink\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")

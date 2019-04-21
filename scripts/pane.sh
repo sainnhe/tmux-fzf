@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [[ "$TMUX_FZF_PANE_FORMAT"x == ""x ]]; then
+    PANES=$(tmux list-panes -a)
+else
+    PANES=$(tmux list-panes -a -F "#S:#{window_index}.#{pane_index}: $TMUX_FZF_PANE_FORMAT")
+fi
+
 ACTION=$(printf "switch\nlayout\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
@@ -12,11 +19,11 @@ elif [[ "$ACTION" == "layout" ]]; then
         tmux select-layout "$TARGET_ORIGIN"
     fi
 else
-    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-panes -a  -F '#S:#{window_index}(#{window_name}).#{pane_index}: #{pane_current_command}  [#{pane_width}x#{pane_height}] [history #{history_size}/#{history_limit}, #{history_bytes} bytes] #{?pane_active,[active],[inactive]}')" | "$CURRENT_DIR/.fzf-tmux")
+    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux")
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
     else
-        TARGET=$(echo "$TARGET_ORIGIN" | sed -r -e 's/\(.*\)//g' | grep -o '.*:' | sed -r 's/(.*)(.)$/\1/')
+        TARGET=$(echo "$TARGET_ORIGIN" | grep -o '^[[:alpha:]]*:[[:digit:]]*\.[[:digit:]]*:' | sed 's/.$//g')
         if [[ "$ACTION" == "switch" ]]; then
             echo "$TARGET" | sed -r 's/:.*//g' | xargs tmux switch-client -t
             echo "$TARGET" | sed -r 's/\..*//g' | xargs tmux select-window -t
