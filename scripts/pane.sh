@@ -23,7 +23,7 @@ else
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
     else
-        TARGET=$(echo "$TARGET_ORIGIN" | grep -o '^[[:alpha:]]*:[[:digit:]]*\.[[:digit:]]*:' | sed 's/.$//g')
+        TARGET=$(echo "$TARGET_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*\.[[:digit:]]*:' | sed 's/.$//g')
         if [[ "$ACTION" == "switch" ]]; then
             echo "$TARGET" | sed -r 's/:.*//g' | xargs tmux switch-client -t
             echo "$TARGET" | sed -r 's/\..*//g' | xargs tmux select-window -t

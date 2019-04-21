@@ -1,19 +1,22 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [[ "$TMUX_FZF_SESSION_FORMAT"x == ""x ]]; then
+    SESSIONS=$(tmux list-sessions)
+else
+    SESSIONS=$(tmux list-sessions -F "#S: $TMUX_FZF_SESSION_FORMAT")
+fi
+
 ACTION=$(printf "attach\ndetach\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 else
-    if [[ "$ACTION" == "detach" ]]; then
-        TARGET_ORIGIN=$(tmux list-sessions | grep "attached" | sed -r '$a [cancel]' | "$CURRENT_DIR/.fzf-tmux")
-    else
-        TARGET_ORIGIN=$(printf "%s\n[cancel]" "$(tmux list-sessions)" | "$CURRENT_DIR/.fzf-tmux")
-    fi
+    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux")
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
     else
-        TARGET=$(echo "$TARGET_ORIGIN" | sed -E 's/:.*$//')
+        TARGET=$(echo "$TARGET_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:' | sed 's/.$//g')
         if [[ "$ACTION" == "attach" ]]; then
             echo "$TARGET" | xargs tmux switch-client -t
         elif [[ "$ACTION" == "detach" ]]; then
