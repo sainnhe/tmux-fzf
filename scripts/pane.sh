@@ -8,7 +8,7 @@ else
     PANES=$(tmux list-panes -a -F "#S:#{window_index}.#{pane_index}: $TMUX_FZF_PANE_FORMAT")
 fi
 
-ACTION=$(printf "switch\nlayout\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+ACTION=$(printf "switch\nlayout\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 elif [[ "$ACTION" == "layout" ]]; then
@@ -19,7 +19,7 @@ elif [[ "$ACTION" == "layout" ]]; then
         tmux select-layout "$TARGET_ORIGIN"
     fi
 else
-    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux")
+    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
     else
