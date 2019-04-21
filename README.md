@@ -3,7 +3,7 @@
 # Feature
 
 - Manage sessions ( attach, detach*, rename, kill* ).
-- Manage windows ( switch, link, rename, kill* ).
+- Manage windows ( switch, link, move, rename, kill* ).
 - Manage panes ( switch, break, join*, layout, kill* ).
 - Multiple selection ( support for actions marked by * ).
 - Search commands and append to command prompt.
@@ -29,7 +29,7 @@ This plugin supports multiple selection for `kill` action, you can press `TAB` a
 
 Most operations don't need to be explained, but there are some operations that might need to be explained here.
 
-## link & unlink window
+## link & move window
 
 You can use **link** action to link a window from another session to current session.
 
@@ -46,6 +46,8 @@ There are 3 available destinations:
 And you can use **kill** action to unlink or kill current window.
 
 The logic of the kill action is a bit like hard link in unix/linux. If the current window only exists in one session, then kill; if the current window exists in multiple sessions, then unlink.
+
+**move** action is similar to link, except the window at source window is moved to destination.
 
 ## break & join pane
 
