@@ -8,7 +8,7 @@ else
     PANES=$(tmux list-panes -a -F "#S:#{window_index}.#{pane_index}: $TMUX_FZF_PANE_FORMAT")
 fi
 
-ACTION=$(printf "switch\nlayout\nkill\nbreak\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+ACTION=$(printf "switch\nlayout\nkill\nbreak\njoin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 elif [[ "$ACTION" == "layout" ]]; then
@@ -30,6 +30,8 @@ else
             echo "$TARGET" | xargs tmux select-pane -t
         elif [[ "$ACTION" == "kill" ]]; then
             echo "$TARGET" | sort -r | xargs -i tmux kill-pane -t {}
+        elif [[ "$ACTION" == "join" ]]; then
+            echo "$TARGET" | sort -r | xargs -i tmux join-pane -s {}
         elif [[ "$ACTION" == "break" ]]; then
             DST_WIN=$(printf "after\nend\nbegin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
             CUR_WIN_NUM=$(tmux display-message -p | grep -o '[[[:alpha:]|[:digit:]]*] [[:digit:]]*:' | sed -e 's/\[.*\] //' -e 's/.$//')
