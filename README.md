@@ -3,7 +3,7 @@
 # Feature
 
 - Manage sessions ( attach, detach*, kill*, rename ).
-- Manage windows ( switch, kill*, rename, link, unlink ).
+- Manage windows ( switch, kill*, rename, link ).
 - Manage panes ( switch, kill*, layout, break, join* ).
 - Multiple selection ( Support for actions marked by * ).
 - Search commands and append to command prompt.
@@ -31,7 +31,7 @@ Most operations don't need to be explained, but there are some operations that m
 
 ## link & unlink window
 
-You can use this plugin to link a window from another session to current session.
+You can use **link** action to link a window from another session to current session.
 
 launch tmux-fzf -> `window` -> `link` -> select a window in another session -> select destination
 
@@ -43,9 +43,9 @@ There are 3 available destinations:
 
 `begin`: link it to the first window in current session
 
-And you can use `unlink` action to unlink current window:
+And you can use **kill** action to unlink or kill current window.
 
-launch tmux-fzf -> `window` -> `unlink`
+The logic of the kill action is a bit like hard link in unix/linux. If the current window only exists in one session, then kill; if the current window exists in multiple sessions, then unlink.
 
 ## break & join pane
 

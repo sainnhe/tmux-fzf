@@ -8,7 +8,7 @@ else
     WINDOWS=$(tmux list-windows -a -F "#S:#{window_index}: $TMUX_FZF_WINDOW_FORMAT")
 fi
 
-ACTION=$(printf "switch\nrename\nkill\nlink\nunlink\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+ACTION=$(printf "switch\nrename\nkill\nlink\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 elif [[ "$ACTION" == "link" ]]; then
@@ -39,9 +39,6 @@ elif [[ "$ACTION" == "link" ]]; then
             tmux kill-window -t "$LAST_WIN_NUM"
         fi
     fi
-elif [[ "$ACTION" == "unlink" ]]; then
-    CUR_WIN=$(tmux display-message -p | sed -e 's/^.//' -e 's/] /:/' | grep -o '[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | sed 's/.$//g')
-    tmux unlink-window -k -t "$CUR_WIN"
 else
     TARGET_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
@@ -49,7 +46,7 @@ else
     else
         TARGET=$(echo "$TARGET_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | sed 's/.$//g')
         if [[ "$ACTION" == "kill" ]]; then
-            echo "$TARGET" | sort -r | xargs -i tmux kill-window -t {}
+            echo "$TARGET" | sort -r | xargs -i tmux unlink-window -k -t {}
         elif [[ "$ACTION" == "rename" ]]; then
             tmux command-prompt -I "rename-window -t $TARGET "
         elif [[ "$ACTION" == "switch" ]]; then
