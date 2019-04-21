@@ -12,7 +12,13 @@ ACTION=$(printf "attach\ndetach\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tm
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 else
-    TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+    if [[ "$ACTION" != "detach" ]]; then
+        TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+    else
+        TMUX_DETACHED_SESSIONS=$(tmux list-sessions | grep -v 'attached' | grep -o '^[[:alpha:]|[:digit:]]*:' | sed 's/.$//g')
+        SESSIONS=$(echo "$SESSIONS" | grep -v "$TMUX_DETACHED_SESSIONS")
+        TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+    fi
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
     else
