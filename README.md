@@ -2,10 +2,10 @@
 
 # Feature
 
-- Manage sessions ( attach, detach*, kill*, rename ).
-- Manage windows ( switch, kill*, rename, link ).
-- Manage panes ( switch, kill*, layout, break, join* ).
-- Multiple selection ( Support for actions marked by * ).
+- Manage sessions ( attach, detach*, rename, kill* ).
+- Manage windows ( switch, link, rename, kill* ).
+- Manage panes ( switch, break, join*, layout, kill* ).
+- Multiple selection ( support for actions marked by * ).
 - Search commands and append to command prompt.
 - Search keys and execute.
 
