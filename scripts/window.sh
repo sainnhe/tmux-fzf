@@ -8,7 +8,7 @@ else
     WINDOWS=$(tmux list-windows -a -F "#S:#{window_index}: $TMUX_FZF_WINDOW_FORMAT")
 fi
 
-ACTION=$(printf "switch\nlink\nmove\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+ACTION=$(printf "switch\nlink\nmove\nswap\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 elif [[ "$ACTION" == "link" ]]; then
@@ -27,10 +27,10 @@ elif [[ "$ACTION" == "link" ]]; then
         elif [[ "$DST_WIN_ORIGIN" == "after" ]]; then
             tmux link-window -a -s "$SRC_WIN" -t "$CUR_WIN"
         elif [[ "$DST_WIN_ORIGIN" == "end" ]]; then
-            ((LAST_WIN_NUM_AFTER=LAST_WIN_NUM+1))
+            ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
         elif [[ "$DST_WIN_ORIGIN" == "begin" ]]; then
-            ((LAST_WIN_NUM_AFTER=LAST_WIN_NUM+1))
+            ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
             tmux new-window -a -t "$CUR_SES":0
             LAST_WIN_NUM=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
@@ -55,10 +55,10 @@ elif [[ "$ACTION" == "move" ]]; then
         elif [[ "$DST_WIN_ORIGIN" == "after" ]]; then
             tmux move-window -a -s "$SRC_WIN" -t "$CUR_WIN"
         elif [[ "$DST_WIN_ORIGIN" == "end" ]]; then
-            ((LAST_WIN_NUM_AFTER=LAST_WIN_NUM+1))
+            ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             tmux move-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
         elif [[ "$DST_WIN_ORIGIN" == "begin" ]]; then
-            ((LAST_WIN_NUM_AFTER=LAST_WIN_NUM+1))
+            ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             tmux move-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
             tmux new-window -a -t "$CUR_SES":0
             LAST_WIN_NUM=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
@@ -77,6 +77,15 @@ else
             echo "$TARGET" | sort -r | xargs -i tmux unlink-window -k -t {}
         elif [[ "$ACTION" == "rename" ]]; then
             tmux command-prompt -I "rename-window -t $TARGET "
+        elif [[ "$ACTION" == "swap" ]]; then
+            WINDOWS=$(echo "$WINDOWS" | grep -v "$TARGET")
+            TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            if [[ "$TARGET_SWAP_ORIGIN" == "[cancel]" ]]; then
+                exit
+            else
+                TARGET_SWAP=$(echo "$TARGET_SWAP_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | sed 's/.$//g')
+                tmux swap-pane -s "$TARGET" -t "$TARGET_SWAP"
+            fi
         elif [[ "$ACTION" == "switch" ]]; then
             echo "$TARGET" | sed 's/:.*//g' | xargs tmux switch-client -t
             echo "$TARGET" | xargs tmux select-window -t

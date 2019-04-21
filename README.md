@@ -3,7 +3,7 @@
 # Feature
 
 - Manage sessions ( attach, detach*, rename, kill* ).
-- Manage windows ( switch, link, move, rename, kill* ).
+- Manage windows ( switch, link, move, swap, rename, kill* ).
 - Manage panes ( switch, break, join*, swap, layout, kill* ).
 - Multiple selection ( support for actions marked by * ).
 - Search commands and append to command prompt.
