@@ -25,7 +25,7 @@ And of course, this plugin requires [fzf](https://github.com/junegunn/fzf/) to g
 
 To launch tmux-fzf, press `prefix` + `F` (Shift+F).
 
-This plugin supports multiple selection for `kill` action, you can press `TAB` and `Shift-TAB` to mark multiple items.
+This plugin supports multiple selection for some actions, you can press `TAB` and `Shift-TAB` to mark multiple items.
 
 Most actions don't need to be explained, but there are some actions that might need to be explained here.
 
