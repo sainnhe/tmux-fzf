@@ -45,7 +45,11 @@ There are 3 available destinations:
 
 And you can use **kill** action to unlink or kill current window.
 
-The logic of the kill action is a bit like hard link in unix/linux. If the current window only exists in one session, then kill; if the current window exists in multiple sessions, then unlink.
+`kill` actually use `tmux unlink-window -k` instead of `tmux kill-window`. The main difference between `unlink-window -k` and `kill-window` is that `kill-window` will kill current window and all other windows linked to it, while `unlink-window -k` will only kill current window.
+
+The logic of the `unlink -k` action is a bit like hard link in unix/linux. If the current window only exists in one session, then kill; if the current window exists in multiple sessions, then unlink.
+
+BTW, if you want to bind a key to kill current window, I would recommend `unlink-window -k` instead of `kill`.
 
 **move** action is similar to link, except the window at source window is moved to destination.
 
