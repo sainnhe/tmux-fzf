@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select a key binding"')
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_ORIGIN=$(tmux list-keys | sed '1i [cancel]' | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
 if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then

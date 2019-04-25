@@ -8,10 +8,12 @@ else
     PANES=$(tmux list-panes -a -F "#S:#{window_index}.#{pane_index}: $TMUX_FZF_PANE_FORMAT")
 fi
 
+FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select an action"')
 ACTION=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
 if [[ "$ACTION" == "[cancel]" ]]; then
     exit
 elif [[ "$ACTION" == "layout" ]]; then
+    FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select a layout"')
     TARGET_ORIGIN=$(printf "even-horizontal\neven-vertical\nmain-horizontal\nmain-vertical\ntiled\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
@@ -19,6 +21,11 @@ elif [[ "$ACTION" == "layout" ]]; then
         tmux select-layout "$TARGET_ORIGIN"
     fi
 else
+    if [[ "$ACTION" == "join" || "$ACTION" == "kill" ]]; then
+        FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select target pane(s), press TAB to select multiple targets"')
+    else
+        FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select target pane"')
+    fi
     TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
@@ -32,6 +39,7 @@ else
             echo "$TARGET" | sort -r | xargs -i tmux kill-pane -t {}
         elif [[ "$ACTION" == "swap" ]]; then
             PANES=$(echo "$PANES" | grep -v "^$TARGET")
+            FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select another target pane"')
             TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
             if [[ "$TARGET_SWAP_ORIGIN" == "[cancel]" ]]; then
                 exit
@@ -42,6 +50,7 @@ else
         elif [[ "$ACTION" == "join" ]]; then
             echo "$TARGET" | sort -r | xargs -i tmux move-pane -s {}
         elif [[ "$ACTION" == "break" ]]; then
+            FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select destination"')
             DST_WIN=$(printf "after\nend\nbegin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
             CUR_WIN_NUM=$(tmux display-message -p | grep -o '[[[:alpha:]|[:digit:]]*] [[:digit:]]*:' | sed -e 's/\[.*\] //' -e 's/.$//')
             CUR_SES=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')

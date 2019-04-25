@@ -7,7 +7,7 @@
 - Manage panes ( switch, break, join*, swap, layout, kill* ).
 - Multiple selection ( support for actions marked by * ).
 - Search commands and append to command prompt.
-- Search keys and execute.
+- Search key bindings and execute.
 
 # Installation
 
