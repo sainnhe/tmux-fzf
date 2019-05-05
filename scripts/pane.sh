@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CURRENT_PANE_ORIGIN=$(tmux display-message -p '#S:#{window_index}.#{pane_index}: #{window_name}')
+CURRENT_PANE=$(tmux display-message -p '#S:#{window_index}.#{pane_index}')
 
 if [[ "$TMUX_FZF_PANE_FORMAT"x == ""x ]]; then
     PANES=$(tmux list-panes -a)
@@ -35,10 +37,20 @@ else
     else
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select target pane"')
     fi
-    if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
-        TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux")
+    if [[ "$ACTION" == "switch" || "$ACTION" == "join" ]]; then
+        PANES=$(echo "$PANES" | grep -v "^$CURRENT_PANE")
+        if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
+            TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux")
+        else
+            TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        fi
     else
-        TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
+            TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux")
+        else
+            TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        fi
+        TARGET_ORIGIN=$(echo "$TARGET_ORIGIN" | sed -r "s/\[current\]/$CURRENT_PANE_ORIGIN/")
     fi
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
