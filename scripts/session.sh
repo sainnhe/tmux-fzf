@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CURRENT_SESSION_ORIGIN=$(tmux list-sessions | grep 'attached')
 
 if [[ "$TMUX_FZF_SESSION_FORMAT"x == ""x ]]; then
     SESSIONS=$(tmux list-sessions)
@@ -24,20 +25,32 @@ else
         else
             FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select target session"')
         fi
-        if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
-            TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux")
+        if [[ "$ACTION" == "attach" ]]; then
+            TMUX_ATTACHED_SESSIONS=$(tmux list-sessions | grep 'attached' | grep -o '^[[:alpha:]|[:digit:]]*:' | sed 's/.$//g')
+            SESSIONS=$(echo "$SESSIONS" | grep -v "^$TMUX_ATTACHED_SESSIONS")
+            if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
+                TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux")
+            else
+                TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            fi
         else
-            TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
+                TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux")
+            else
+                TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            fi
+            TARGET_ORIGIN=$(echo "$TARGET_ORIGIN" | sed -r "s/\[current\]/$CURRENT_SESSION_ORIGIN/")
         fi
     else
         TMUX_ATTACHED_SESSIONS=$(tmux list-sessions | grep 'attached' | grep -o '^[[:alpha:]|[:digit:]]*:' | sed 's/.$//g')
         SESSIONS=$(echo "$SESSIONS" | grep "^$TMUX_ATTACHED_SESSIONS")
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select target session(s), press TAB to select multiple targets"')
         if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
-            TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux")
+            TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux")
         else
-            TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
         fi
+        TARGET_ORIGIN=$(echo "$TARGET_ORIGIN" | sed -r "s/\[current\]/$CURRENT_SESSION_ORIGIN/")
     fi
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit

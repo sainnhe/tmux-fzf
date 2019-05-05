@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CURRENT_WINDOW_ORIGIN=$(tmux display-message -p '#S:#I: #{window_name}')
+CURRENT_WINDOW=$(tmux display-message -p '#S:#I')
 
 if [[ "$TMUX_FZF_WINDOW_FORMAT"x == ""x ]]; then
     WINDOWS=$(tmux list-windows -a)
@@ -100,10 +102,20 @@ else
     else
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select target window"')
     fi
-    if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
-        TARGET_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux")
+    if [[ "$ACTION" != "switch" ]]; then
+        if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
+            TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux")
+        else
+            TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        fi
+        TARGET_ORIGIN=$(echo "$TARGET_ORIGIN" | sed -r "s/\[current\]/$CURRENT_WINDOW_ORIGIN/")
     else
-        TARGET_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        WINDOWS=$(echo "$WINDOWS" | grep -v "^$CURRENT_WINDOW")
+        if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
+            TARGET_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux")
+        else
+            TARGET_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        fi
     fi
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
@@ -114,7 +126,7 @@ else
         elif [[ "$ACTION" == "rename" ]]; then
             tmux command-prompt -I "rename-window -t $TARGET "
         elif [[ "$ACTION" == "swap" ]]; then
-            WINDOWS=$(echo "$WINDOWS" | grep -v "$TARGET")
+            WINDOWS=$(echo "$WINDOWS" | grep -v "^$TARGET")
             FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select another target window"')
             if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
                 TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux")
