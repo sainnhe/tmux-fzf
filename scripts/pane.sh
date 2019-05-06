@@ -91,20 +91,23 @@ else
             ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             ((CUR_WIN_NUM_AFTER = CUR_WIN_NUM + 1))
             if [[ "$DST_WIN" == "after" ]]; then
+                AFTER_NUMS=$(tmux list-windows | sed -r "1,/^$CUR_WIN_NUM/d" | grep "" -c)
                 tmux break-pane -s "$TARGET" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-                tmux new-window -a -t "$CUR_SES":"$CUR_WIN_NUM"
-                LAST_WIN_NUM=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
-                tmux swap-window -s "$CUR_SES":"$LAST_WIN_NUM" -t "$CUR_SES":"$CUR_WIN_NUM_AFTER"
-                tmux kill-window -t "$CUR_SES":"$LAST_WIN_NUM"
+                CNT=1
+                while [ $CNT -le $AFTER_NUMS ]; do
+                    tmux swap-window -t -1
+                    ((CNT = CNT + 1))
+                done
             elif [[ "$DST_WIN" == "end" ]]; then
                 tmux break-pane -s "$TARGET" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
             elif [[ "$DST_WIN" == "begin" ]]; then
+                WIN_NUMS=$(tmux list-windows | grep "" -c)
                 tmux break-pane -s "$TARGET" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-                tmux new-window -a -t "$CUR_SES":0
-                LAST_WIN_NUM=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
-                tmux swap-window -s "$CUR_SES":"$LAST_WIN_NUM" -t "$CUR_SES":1
-                tmux swap-window -s "$CUR_SES":1 -t "$CUR_SES":0
-                tmux kill-window -t "$CUR_SES":"$LAST_WIN_NUM"
+                CNT=1
+                while [ $CNT -le $WIN_NUMS ]; do
+                    tmux swap-window -t -1
+                    ((CNT = CNT + 1))
+                done
             fi
         fi
     fi
