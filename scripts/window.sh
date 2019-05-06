@@ -49,13 +49,14 @@ elif [[ "$ACTION" == "link" ]]; then
             ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
         elif [[ "$DST_WIN_ORIGIN" == "begin" ]]; then
+            WIN_NUMS=$(tmux list-windows | grep "" -c)
             ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-            tmux new-window -a -t "$CUR_SES":0
-            LAST_WIN_NUM=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
-            tmux swap-window -s "$LAST_WIN_NUM" -t 1
-            tmux swap-window -s 1 -t 0
-            tmux kill-window -t "$LAST_WIN_NUM"
+            CNT=1
+            while [ $CNT -le $WIN_NUMS ]; do
+                tmux swap-window -t -1
+                ((CNT = CNT + 1))
+            done
         fi
     fi
 elif [[ "$ACTION" == "move" ]]; then
@@ -87,13 +88,14 @@ elif [[ "$ACTION" == "move" ]]; then
             ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             tmux move-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
         elif [[ "$DST_WIN_ORIGIN" == "begin" ]]; then
+            WIN_NUMS=$(tmux list-windows | grep "" -c)
             ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             tmux move-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-            tmux new-window -a -t "$CUR_SES":0
-            LAST_WIN_NUM=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
-            tmux swap-window -s "$LAST_WIN_NUM" -t 1
-            tmux swap-window -s 1 -t 0
-            tmux kill-window -t "$LAST_WIN_NUM"
+            CNT=1
+            while [ $CNT -le $WIN_NUMS ]; do
+                tmux swap-window -t -1
+                ((CNT = CNT + 1))
+            done
         fi
     fi
 else
