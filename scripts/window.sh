@@ -49,14 +49,8 @@ elif [[ "$ACTION" == "link" ]]; then
             ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
         elif [[ "$DST_WIN_ORIGIN" == "begin" ]]; then
-            WIN_NUMS=$(tmux list-windows | grep "" -c)
-            ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-            CNT=1
-            while [ $CNT -le $WIN_NUMS ]; do
-                tmux swap-window -t -1
-                ((CNT = CNT + 1))
-            done
+            tmux swap-window -t +1
         fi
     fi
 elif [[ "$ACTION" == "move" ]]; then
@@ -88,14 +82,8 @@ elif [[ "$ACTION" == "move" ]]; then
             ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             tmux move-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
         elif [[ "$DST_WIN_ORIGIN" == "begin" ]]; then
-            WIN_NUMS=$(tmux list-windows | grep "" -c)
-            ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
             tmux move-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-            CNT=1
-            while [ $CNT -le $WIN_NUMS ]; do
-                tmux swap-window -t -1
-                ((CNT = CNT + 1))
-            done
+            tmux swap-window -t +1
         fi
     fi
 else

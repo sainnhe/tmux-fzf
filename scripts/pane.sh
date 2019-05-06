@@ -101,13 +101,8 @@ else
             elif [[ "$DST_WIN" == "end" ]]; then
                 tmux break-pane -s "$TARGET" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
             elif [[ "$DST_WIN" == "begin" ]]; then
-                WIN_NUMS=$(tmux list-windows | grep "" -c)
                 tmux break-pane -s "$TARGET" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-                CNT=1
-                while [ $CNT -le $WIN_NUMS ]; do
-                    tmux swap-window -t -1
-                    ((CNT = CNT + 1))
-                done
+                tmux swap-window -t +1
             fi
         fi
     fi
