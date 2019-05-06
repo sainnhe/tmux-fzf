@@ -5,7 +5,7 @@ CURRENT_PANE_ORIGIN=$(tmux display-message -p '#S:#{window_index}.#{pane_index}:
 CURRENT_PANE=$(tmux display-message -p '#S:#{window_index}.#{pane_index}')
 
 if [[ "$TMUX_FZF_PANE_FORMAT"x == ""x ]]; then
-    PANES=$(tmux list-panes -a)
+    PANES=$(tmux list-panes -a -F "#S:#{window_index}.#{pane_index}: [#{window_name}] #{pane_current_command}  [#{pane_width}x#{pane_height}] [history #{history_size}/#{history_limit}, #{history_bytes} bytes] #{?pane_active,[active],[inactive]}")
 else
     PANES=$(tmux list-panes -a -F "#S:#{window_index}.#{pane_index}: $TMUX_FZF_PANE_FORMAT")
 fi
