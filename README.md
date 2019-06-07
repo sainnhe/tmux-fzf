@@ -111,3 +111,7 @@ Similarly, `TMUX_FZF_WINDOW_FORMAT` and `TMUX_FZF_SESSION_FORMAT` can also be ha
 
 For more information, check "FORMATS" section in tmux manual.
 
+# FAQ
+
+- **Q:** What's your status line configuration?
+- **A:** Check this [gist](https://gist.github.com/sainnhe/b8240bc047313fd6185bb8052df5a8fb).
