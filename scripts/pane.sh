@@ -12,9 +12,9 @@ fi
 
 FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select an action"')
 if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
-    ACTION=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+    ACTION=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\nresize\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
 else
-    ACTION=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+    ACTION=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\nresize\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
 fi
 
 if [[ "$ACTION" == "[cancel]" ]]; then
@@ -30,6 +30,46 @@ elif [[ "$ACTION" == "layout" ]]; then
         exit
     else
         tmux select-layout "$TARGET_ORIGIN"
+    fi
+elif [[ "$ACTION" == "resize" ]]; then
+    FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select direction"')
+    if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
+        TARGET_ORIGIN=$(printf "left\nright\nup\ndown\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+    else
+        TARGET_ORIGIN=$(printf "left\nright\nup\ndown\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+    fi
+    if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
+        exit
+    elif [[ "$TARGET_ORIGIN" == "left" || "$TARGET_ORIGIN" == "right" ]]; then
+        FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="cells to be adjusted"')
+        if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
+            SIZE=$(printf "1\n2\n3\n5\n10\n20\n30\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+        else
+            SIZE=$(printf "1\n2\n3\n5\n10\n20\n30\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        fi
+        if [[ "$SIZE" == "[cancel]" ]]; then
+            exit
+        fi
+        if [[ "$TARGET_ORIGIN" == "left" ]]; then
+            tmux resize-pane -L "$SIZE"
+        else
+            tmux resize-pane -R "$SIZE"
+        fi
+    elif [[ "$TARGET_ORIGIN" == "up" || "$TARGET_ORIGIN" == "down" ]]; then
+        FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="lines to be adjusted"')
+        if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
+            SIZE=$(printf "1\n2\n3\n5\n10\n15\n20\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+        else
+            SIZE=$(printf "1\n2\n3\n5\n10\n15\n20\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        fi
+        if [[ "$SIZE" == "[cancel]" ]]; then
+            exit
+        fi
+        if [[ "$TARGET_ORIGIN" == "up" ]]; then
+            tmux resize-pane -U "$SIZE"
+        else
+            tmux resize-pane -D "$SIZE"
+        fi
     fi
 else
     if [[ "$ACTION" == "join" || "$ACTION" == "kill" ]]; then
