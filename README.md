@@ -1,11 +1,11 @@
-![](./demo.png)
+![](https://user-images.githubusercontent.com/37491630/65587074-c4a72700-df74-11e9-91f6-091a5ddf00a6.png)
 
 # Feature
 
-- Manage sessions ( attach, detach*, rename, kill* ).
-- Manage windows ( switch, link, move, swap, rename, kill* ).
-- Manage panes ( switch, break, join*, swap, layout, kill* ).
-- Multiple selection ( support for actions marked by * ).
+- Manage sessions (attach, detach*, rename, kill*).
+- Manage windows (switch, link, move, swap, rename, kill*).
+- Manage panes (switch, break, join*, swap, layout, kill*, resize).
+- Multiple selection (support for actions marked by *).
 - Search commands and append to command prompt.
 - Search key bindings and execute.
 
@@ -115,3 +115,5 @@ For more information, check "FORMATS" section in tmux manual.
 
 - **Q:** What's your status line configuration?
 - **A:** Check this [gist](https://gist.github.com/sainnhe/b8240bc047313fd6185bb8052df5a8fb).
+- **Q:** What's the color scheme used in the screenshot?
+- **A:** [Gruvbox Material](https://github.com/sainnhe/gruvbox-material)
