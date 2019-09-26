@@ -117,3 +117,7 @@ For more information, check "FORMATS" section in tmux manual.
 - **A:** Check this [gist](https://gist.github.com/sainnhe/b8240bc047313fd6185bb8052df5a8fb).
 - **Q:** What's the color scheme used in the screenshot?
 - **A:** [Gruvbox Material](https://github.com/sainnhe/gruvbox-material)
+
+# License
+
+[MIT](./LICENSE) && [Anti-996](./Anti-996-LICENSE)
