@@ -8,6 +8,7 @@
 - Multiple selection (support for actions marked by *).
 - Search commands and append to command prompt.
 - Search key bindings and execute.
+- User menu.
 
 # Installation
 
@@ -28,6 +29,33 @@ To launch tmux-fzf, press `prefix` + `F` (Shift+F).
 This plugin supports multiple selection for some actions, you can press `TAB` and `Shift-TAB` to mark multiple items.
 
 Most actions don't need to be explained, but there are some actions that might need to be explained here.
+
+## User menu
+
+You can add a custom menu to quickly execute some commands.
+
+This feature is not enabled by default. To enable it, add something like this into `$HOME/.tmux.conf`
+
+```sh
+TMUX_FZF_MENU=\
+"foo\necho 'Hello!'\n"\
+"bar\nls ~\n"\
+"sh\nsh ~/test.sh\n"
+```
+
+When you launch tmux-fzf, an extra item named `menu` will appear. Selecting this item will produce [this](https://user-images.githubusercontent.com/37491630/66251156-71836000-e73c-11e9-809d-e865651f8d7d.png).
+
+There will be 3 items to select from: `foo`, `bar` and `sh`.
+
+When you select `foo`, tmux will execute `echo 'Hello!'`.
+
+When you select `bar`, tmux will execute `ls ~`.
+
+When you select `sh`, tmux will execute `sh ~/test.sh`.
+
+Please note that `foo` and `echo 'hello'` are separated by `\n` in `TMUX_FZF_MENU`, and you need to add another `\n` after `echo 'hello'`.
+
+Commands are executed using `tmux -c`, so please make sure `tmux -c "your command"` makes sense.
 
 ## link & move window
 
