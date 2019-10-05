@@ -77,15 +77,7 @@ BTW, if you want to bind a key to kill current window, I would recommend `unlink
 
 **break** action will break source pane off from its containing window to make it the only pane in destination window.
 
-launch tmux-fzf -> `pane` -> `break` -> select source pane -> select destination
-
-There are 3 available destinations:
-
-`after`: break it after current window
-
-`end`: break it to the last window in current session
-
-`begin`: break it to the first window in current session
+launch tmux-fzf -> `pane` -> `break` -> select source pane
 
 **join** action is like split-window, but instead of splitting destination pane and creating a new pane, it will split it and move source pane into the current window. This can be used to reverse break-pane.
 
