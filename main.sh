@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ITEMS_ORIGIN=$(printf "session\nwindow\npane\ncommand\nkeybinding")
+
+if [[ "$TMUX_FZF_MENU"x == ""x ]]; then
+    ITEMS_ORIGIN=$(printf "session\nwindow\npane\ncommand\nkeybinding")
+else
+    ITEMS_ORIGIN=$(printf "menu\nsession\nwindow\npane\ncommand\nkeybinding")
+fi
 if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
     ITEM=$(printf "%s\n[cancel]" "$ITEMS_ORIGIN" | "$CURRENT_DIR/scripts/.fzf-tmux")
 else
