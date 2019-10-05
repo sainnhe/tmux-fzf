@@ -119,31 +119,10 @@ else
         elif [[ "$ACTION" == "join" ]]; then
             echo "$TARGET" | sort -r | xargs -i tmux move-pane -s {}
         elif [[ "$ACTION" == "break" ]]; then
-            FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select destination"')
-            if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
-                DST_WIN=$(printf "after\nend\nbegin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
-            else
-                DST_WIN=$(printf "after\nend\nbegin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
-            fi
-            CUR_WIN_NUM=$(tmux display-message -p | grep -o '[[[:alpha:]|[:digit:]]*] [[:digit:]]*:' | sed -e 's/\[.*\] //' -e 's/.$//')
             CUR_SES=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')
             LAST_WIN_NUM=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
             ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
-            ((CUR_WIN_NUM_AFTER = CUR_WIN_NUM + 1))
-            if [[ "$DST_WIN" == "after" ]]; then
-                AFTER_NUMS=$(tmux list-windows | sed -r "1,/^$CUR_WIN_NUM/d" | grep "" -c)
-                tmux break-pane -s "$TARGET" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-                CNT=1
-                while [ $CNT -le $AFTER_NUMS ]; do
-                    tmux swap-window -t -1
-                    ((CNT = CNT + 1))
-                done
-            elif [[ "$DST_WIN" == "end" ]]; then
-                tmux break-pane -s "$TARGET" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-            elif [[ "$DST_WIN" == "begin" ]]; then
-                tmux break-pane -s "$TARGET" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-                tmux swap-window -t +1
-            fi
+            tmux break-pane -s "$TARGET" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
         fi
     fi
 fi
