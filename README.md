@@ -61,15 +61,7 @@ Commands are executed using `tmux -c`, so please make sure `tmux -c "your comman
 
 You can use **link** action to link a window from another session to current session.
 
-launch tmux-fzf -> `window` -> `link` -> select a window in another session -> select destination
-
-There are 3 available destinations:
-
-`after`: link it after current window
-
-`end`: link it to the last window in current session
-
-`begin`: link it to the first window in current session
+launch tmux-fzf -> `window` -> `link` -> select a window in another session
 
 And you can use **kill** action to unlink or kill current window.
 

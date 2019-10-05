@@ -35,23 +35,7 @@ elif [[ "$ACTION" == "link" ]]; then
         exit
     else
         SRC_WIN=$(echo "$SRC_WIN_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | sed 's/.$//g')
-        FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select destination"')
-        if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
-            DST_WIN_ORIGIN=$(printf "after\nend\nbegin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
-        else
-            DST_WIN_ORIGIN=$(printf "after\nend\nbegin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
-        fi
-        if [[ "$DST_WIN_ORIGIN" == "[cancel]" ]]; then
-            exit
-        elif [[ "$DST_WIN_ORIGIN" == "after" ]]; then
-            tmux link-window -a -s "$SRC_WIN" -t "$CUR_WIN"
-        elif [[ "$DST_WIN_ORIGIN" == "end" ]]; then
-            ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
-            tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-        elif [[ "$DST_WIN_ORIGIN" == "begin" ]]; then
-            tmux link-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-            tmux swap-window -t +1
-        fi
+        tmux link-window -a -s "$SRC_WIN" -t "$CUR_WIN"
     fi
 elif [[ "$ACTION" == "move" ]]; then
     CUR_WIN=$(tmux display-message -p | sed -e 's/^.//' -e 's/] /:/' | grep -o '[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | sed 's/.$//g')
@@ -68,23 +52,7 @@ elif [[ "$ACTION" == "move" ]]; then
         exit
     else
         SRC_WIN=$(echo "$SRC_WIN_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | sed 's/.$//g')
-        FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -r -e '$a --header="select destination"')
-        if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
-            DST_WIN_ORIGIN=$(printf "after\nend\nbegin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
-        else
-            DST_WIN_ORIGIN=$(printf "after\nend\nbegin\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
-        fi
-        if [[ "$DST_WIN_ORIGIN" == "[cancel]" ]]; then
-            exit
-        elif [[ "$DST_WIN_ORIGIN" == "after" ]]; then
-            tmux move-window -a -s "$SRC_WIN" -t "$CUR_WIN"
-        elif [[ "$DST_WIN_ORIGIN" == "end" ]]; then
-            ((LAST_WIN_NUM_AFTER = LAST_WIN_NUM + 1))
-            tmux move-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-        elif [[ "$DST_WIN_ORIGIN" == "begin" ]]; then
-            tmux move-window -s "$SRC_WIN" -t "$CUR_SES":"$LAST_WIN_NUM_AFTER"
-            tmux swap-window -t +1
-        fi
+        tmux move-window -a -s "$SRC_WIN" -t "$CUR_WIN"
     fi
 else
     if [[ "$ACTION" == "kill" ]]; then
