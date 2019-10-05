@@ -12,15 +12,20 @@
 
 # Installation
 
-Suppose you are using [tpm](https://github.com/tmux-plugins/tpm/), add this line into your `$HOME/.tmux.conf`
+## Requirements
+
+- bash
+- [fzf](https://github.com/junegunn/fzf/)
+
+## Install via [TPM](https://github.com/tmux-plugins/tpm/)
+
+Add this line into your `$HOME/.tmux.conf`
 
 ```tmux
 set -g @plugin 'sainnhe/tmux-fzf'
 ```
 
 Reload configuration, then press `prefix` + `I`.
-
-And of course, this plugin requires [fzf](https://github.com/junegunn/fzf/) to get it work.
 
 # Usage
 
@@ -30,7 +35,33 @@ This plugin supports multiple selection for some actions, you can press `TAB` an
 
 Most actions don't need to be explained, but there are some actions that might need to be explained here.
 
-## User menu
+## link & move window
+
+You can use **link** action to link a window from another session to current session.
+
+launch tmux-fzf -> `window` -> `link` -> select a window in another session
+
+And you can use **kill** action to unlink or kill current window.
+
+`kill` actually use `tmux unlink-window -k` instead of `tmux kill-window`. The main difference between `unlink-window -k` and `kill-window` is that `kill-window` will kill current window and all other windows linked to it, while `unlink-window -k` will only kill current window.
+
+The logic of the `unlink -k` action is a bit like hard link in unix/linux. If the current window only exists in one session, then kill; if the current window exists in multiple sessions, then unlink.
+
+Btw, if you want to bind a key to kill current window, I would recommend `unlink-window -k` instead of `kill`.
+
+**move** action is similar to link, except the window at source window is moved to destination.
+
+## break & join pane
+
+**break** action will break source pane off from its containing window to make it the only pane in destination window.
+
+launch tmux-fzf -> `pane` -> `break` -> select source pane
+
+**join** action is like split-window, but instead of splitting destination pane and creating a new pane, it will split it and move source pane into the current window. This can be used to reverse break-pane.
+
+launch tmux-fzf -> `pane` -> `join` -> select source pane(s)
+
+## user menu
 
 You can add a custom menu to quickly execute some commands.
 
@@ -53,35 +84,11 @@ When you select `bar`, tmux will execute `ls ~`.
 
 When you select `sh`, tmux will execute `sh ~/test.sh`.
 
-Please note that `foo` and `echo 'hello'` are separated by `\n` in `TMUX_FZF_MENU`, and you need to add another `\n` after `echo 'hello'`.
+**Note:**
 
-Commands are executed using `tmux -c`, so please make sure `tmux -c "your command"` makes sense.
-
-## link & move window
-
-You can use **link** action to link a window from another session to current session.
-
-launch tmux-fzf -> `window` -> `link` -> select a window in another session
-
-And you can use **kill** action to unlink or kill current window.
-
-`kill` actually use `tmux unlink-window -k` instead of `tmux kill-window`. The main difference between `unlink-window -k` and `kill-window` is that `kill-window` will kill current window and all other windows linked to it, while `unlink-window -k` will only kill current window.
-
-The logic of the `unlink -k` action is a bit like hard link in unix/linux. If the current window only exists in one session, then kill; if the current window exists in multiple sessions, then unlink.
-
-BTW, if you want to bind a key to kill current window, I would recommend `unlink-window -k` instead of `kill`.
-
-**move** action is similar to link, except the window at source window is moved to destination.
-
-## break & join pane
-
-**break** action will break source pane off from its containing window to make it the only pane in destination window.
-
-launch tmux-fzf -> `pane` -> `break` -> select source pane
-
-**join** action is like split-window, but instead of splitting destination pane and creating a new pane, it will split it and move source pane into the current window. This can be used to reverse break-pane.
-
-launch tmux-fzf -> `pane` -> `join` -> select source pane(s)
+- `foo` and `echo 'hello'` are separated by `\n` in `TMUX_FZF_MENU`, and you need to add another `\n` after `echo 'hello'`.
+- **DO NOT** add additional white spaces/tabs at the beginning of each line.
+- Commands are executed using `tmux -c`, so please make sure `tmux -c "your command"` makes sense.
 
 # Customization
 
