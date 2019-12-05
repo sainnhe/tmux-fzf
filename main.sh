@@ -16,5 +16,5 @@ if [[ "$ITEM" == "[cancel]" ]]; then
     exit
 else
     ITEM=$(echo "$CURRENT_DIR/scripts/$ITEM" | sed 's/$/.sh/')
-    tmux run-shell "$ITEM"
+    tmux run-shell -b "$ITEM"
 fi
