@@ -17,7 +17,7 @@
 - bash
 - [fzf](https://github.com/junegunn/fzf/)
 
-**Note:** Please use this command to check whether tmux is able to find fzf [#1](https://github.com/sainnhe/tmux-fzf/issues/1): `tmux run-shell 'command -v fzf'`
+**Note:** Please use this command to check whether tmux is able to find fzf [#1](https://github.com/sainnhe/tmux-fzf/issues/1): `tmux run-shell -b 'command -v fzf'`
 
 ## Install via [TPM](https://github.com/tmux-plugins/tpm/)
 
