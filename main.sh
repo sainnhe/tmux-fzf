@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+if [[ "$TMUX_FZF_SED"x == ""x ]]; then
+    TMUX_FZF_SED="sed"
+fi
+if [[ "$($TMUX_FZF_SED --version 2> /dev/null | head -n 1 | grep -o GNU)" != "GNU" ]]; then
+    tmux run-shell -b 'echo "Unable to find executable GNU sed."'
+    exit 1
+fi
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [[ "$TMUX_FZF_MENU"x == ""x ]]; then
@@ -15,6 +22,6 @@ fi
 if [[ "$ITEM" == "[cancel]" ]]; then
     exit
 else
-    ITEM=$(echo "$CURRENT_DIR/scripts/$ITEM" | sed 's/$/.sh/')
+    ITEM=$(echo "$CURRENT_DIR/scripts/$ITEM" | $TMUX_FZF_SED 's/$/.sh/')
     tmux run-shell -b "$ITEM"
 fi

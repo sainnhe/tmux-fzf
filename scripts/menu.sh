@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
 
+if [[ "$TMUX_FZF_SED"x == ""x ]]; then
+    TMUX_FZF_SED="sed"
+fi
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # get front end list
 TMUX_FZF_MENU_ORIGIN=$TMUX_FZF_MENU
-FRONT_END_LIST=$(echo -e "$TMUX_FZF_MENU_ORIGIN" | sed -n '1p')
-TMUX_FZF_MENU_ORIGIN=$(echo -e "$TMUX_FZF_MENU_ORIGIN" | sed '1,2d')
+FRONT_END_LIST=$(echo -e "$TMUX_FZF_MENU_ORIGIN" | $TMUX_FZF_SED -n '1p')
+TMUX_FZF_MENU_ORIGIN=$(echo -e "$TMUX_FZF_MENU_ORIGIN" | $TMUX_FZF_SED '1,2d')
 while [[ $(echo -e "$TMUX_FZF_MENU_ORIGIN" | wc -l) != "0" && $(echo -e "$TMUX_FZF_MENU_ORIGIN" | wc -l) != "1" ]]; do
-    FRONT_END_LIST="$FRONT_END_LIST\n"$(echo -e "$TMUX_FZF_MENU_ORIGIN" | sed -n '1p')
-    TMUX_FZF_MENU_ORIGIN=$(echo -e "$TMUX_FZF_MENU_ORIGIN" | sed '1,2d')
+    FRONT_END_LIST="$FRONT_END_LIST\n"$(echo -e "$TMUX_FZF_MENU_ORIGIN" | $TMUX_FZF_SED -n '1p')
+    TMUX_FZF_MENU_ORIGIN=$(echo -e "$TMUX_FZF_MENU_ORIGIN" | $TMUX_FZF_SED '1,2d')
 done
-FRONT_END_LIST=$(echo -e "$FRONT_END_LIST" | sed '/^[[:space:]]*$/d')
+FRONT_END_LIST=$(echo -e "$FRONT_END_LIST" | $TMUX_FZF_SED '/^[[:space:]]*$/d')
 
 if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
     TARGET=$(printf "[cancel]\n%s" "$FRONT_END_LIST" | "$CURRENT_DIR/.fzf-tmux" | grep -o '^[^[:blank:]]*')
@@ -22,5 +25,5 @@ if [[ "$TARGET" == "[cancel]" ]]; then
     exit
 else
     # get the next line in $TMUX_FZF_MENU and execute
-    echo -e "$TMUX_FZF_MENU" | sed -n "/$TARGET/{n;p;}" | xargs -i tmux -c {}
+    echo -e "$TMUX_FZF_MENU" | $TMUX_FZF_SED -n "/$TARGET/{n;p;}" | xargs -i tmux -c {}
 fi
