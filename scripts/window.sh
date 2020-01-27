@@ -15,10 +15,14 @@ fi
 
 FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="select an action"')
 
-if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
-    ACTION=$(printf "switch\nlink\nmove\nswap\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+if [[ "$1"x == ""x ]]; then
+    if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
+        ACTION=$(printf "switch\nlink\nmove\nswap\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
+    else
+        ACTION=$(printf "switch\nlink\nmove\nswap\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+    fi
 else
-    ACTION=$(printf "switch\nlink\nmove\nswap\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+    ACTION="$1"
 fi
 
 if [[ "$ACTION" == "[cancel]" ]]; then
