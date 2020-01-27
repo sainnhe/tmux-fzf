@@ -45,6 +45,8 @@ To launch tmux-fzf, press `prefix` + `F` (Shift+F).
 
 This plugin supports multiple selection for some actions, you can press `TAB` and `Shift-TAB` to mark multiple items.
 
+You can bind a key to preselect an action. See [#6](https://github.com/sainnhe/tmux-fzf/issues/6) for more information.
+
 Most actions don't need to be explained, but there are some actions that might need to be explained here.
 
 ## link & move window
@@ -147,7 +149,7 @@ For more information, check "FORMATS" section in tmux manual.
 - **Q:** What's your status line configuration?
 - **A:** Check this [gist](https://gist.github.com/sainnhe/b8240bc047313fd6185bb8052df5a8fb).
 - **Q:** What's the color scheme used in the screenshot?
-- **A:** [Gruvbox Material](https://github.com/sainnhe/gruvbox-material)
+- **A:** [Gruvbox Material](https://github.com/gruvbox-material/gruvbox-material)
 
 # License
 
