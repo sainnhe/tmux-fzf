@@ -33,7 +33,7 @@ else
             FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="select target session"')
         fi
         if [[ "$ACTION" == "attach" ]]; then
-            TMUX_ATTACHED_SESSIONS=$(tmux list-sessions | grep 'attached' | grep -o '^[[:alpha:]|[:digit:]]*:' | $TMUX_FZF_SED 's/.$//g')
+            TMUX_ATTACHED_SESSIONS=$(tmux list-sessions | grep 'attached' | grep -o '^[[:alpha:][:digit:]_-]*:' | $TMUX_FZF_SED 's/.$//g')
             SESSIONS=$(echo "$SESSIONS" | grep -v "^$TMUX_ATTACHED_SESSIONS")
             if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
                 TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux")
@@ -49,7 +49,7 @@ else
             TARGET_ORIGIN=$(echo "$TARGET_ORIGIN" | $TMUX_FZF_SED -r "s/\[current\]/$CURRENT_SESSION_ORIGIN/")
         fi
     else
-        TMUX_ATTACHED_SESSIONS=$(tmux list-sessions | grep 'attached' | grep -o '^[[:alpha:]|[:digit:]]*:' | $TMUX_FZF_SED 's/.$//g')
+        TMUX_ATTACHED_SESSIONS=$(tmux list-sessions | grep 'attached' | grep -o '^[[:alpha:][:digit:]_-]*:' | $TMUX_FZF_SED 's/.$//g')
         SESSIONS=$(echo "$SESSIONS" | grep "^$TMUX_ATTACHED_SESSIONS")
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="select target session(s), press TAB to select multiple targets"')
         if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
@@ -62,7 +62,7 @@ else
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
     else
-        TARGET=$(echo "$TARGET_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:' | $TMUX_FZF_SED 's/.$//g')
+        TARGET=$(echo "$TARGET_ORIGIN" | grep -o '^[[:alpha:][:digit:]_-]*:' | $TMUX_FZF_SED 's/.$//g')
         if [[ "$ACTION" == "attach" ]]; then
             echo "$TARGET" | xargs tmux switch-client -t
         elif [[ "$ACTION" == "detach" ]]; then
