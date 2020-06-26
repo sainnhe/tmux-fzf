@@ -1,6 +1,6 @@
-![](https://user-images.githubusercontent.com/37491630/65587074-c4a72700-df74-11e9-91f6-091a5ddf00a6.png)
+![](https://gitlab.com/sainnhe/img/-/raw/master/tmux-fzf-demo.gif)
 
-# Feature
+# Features
 
 - Manage sessions (attach, detach*, rename, kill*).
 - Manage windows (switch, link, move, swap, rename, kill*).
@@ -9,6 +9,7 @@
 - Search commands and append to command prompt.
 - Search key bindings and execute.
 - User menu.
+- [Popup window](https://github.com/tmux/tmux/issues/1842) support.
 
 # Installation
 
@@ -104,6 +105,14 @@ When you select `sh`, tmux will execute `sh ~/test.sh`.
 - **DO NOT** add additional white spaces/tabs at the beginning of each line.
 - Commands are executed using `tmux -c`, so please make sure `tmux -c "your command"` makes sense.
 
+## popup window
+
+To enable popup window, you'll need to compile and install the latest development version from [tmux/tmux](https://github.com/tmux/tmux).
+
+For arch linux users, there is a package available in AUR: [tmux-git](https://aur.archlinux.org/packages/tmux-git)
+
+This feature is automatically enabled in the version >= 3.2, but you can disable it by adding `TMUX_FZF_POPUP=0` to your `~/.tmux.conf`.
+
 # Customization
 
 ## key binding
@@ -128,6 +137,15 @@ TMUX_FZF_OPTIONS="-d 35%"
 
 To list all available `fzf-tmux` options, execute `fzf-tmux --help` in your shell.
 
+## popup window
+
+To adjust the width and height of popup window, add something like this to your `~/.tmux.conf`:
+
+```
+TMUX_FZF_POPUP_HEIGHT="38%"
+TMUX_FZF_POPUP_WIDTH="62%"
+```
+
 ## format
 
 For some reasons, you may want to customize format of panes, windows, sessions listed in fzf. There are three variables to complete this work:
@@ -147,9 +165,12 @@ For more information, check "FORMATS" section in tmux manual.
 # FAQ
 
 - **Q:** What's your status line configuration?
-- **A:** Check this [gist](https://gist.github.com/sainnhe/b8240bc047313fd6185bb8052df5a8fb).
+
+**A:** Check this [gist](https://gist.github.com/sainnhe/b8240bc047313fd6185bb8052df5a8fb).
+
 - **Q:** What's the color scheme used in the screenshot?
-- **A:** [Gruvbox Material](https://github.com/gruvbox-material/gruvbox-material)
+
+**A:** [Gruvbox Material](https://github.com/gruvbox-material/gruvbox-material)
 
 # License
 
