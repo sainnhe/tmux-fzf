@@ -1,4 +1,4 @@
-![](https://gitlab.com/sainnhe/img/-/raw/master/tmux-fzf-demo.gif)
+![](https://gitlab.com/sainnhe/img/-/raw/master/tmux-fzf.gif)
 
 # Features
 
@@ -24,7 +24,7 @@
 1. Please use this command to check whether tmux is able to find fzf [#1](https://github.com/sainnhe/tmux-fzf/issues/1): `tmux run-shell -b 'command -v fzf'`
 2. Currently this plugin is only compatible with GNU sed. Other sed variants such as Mac OS sed or FreeBSD sed are not supported. You need to ensure that this plugin is using GNU sed(see [#5](https://github.com/sainnhe/tmux-fzf/issues/5) for steps to install GNU sed on Mac OS).
 
-If you don't want to make GNU sed the system default, but instead customize the executable path, then add this line to your `$HOME/.tmux.conf`
+If you don't want to make GNU sed the system default, but instead customize the executable path, then add this line to your `~/.tmux.conf`
 
 ```tmux
 TMUX_FZF_SED="/path/to/sed"
@@ -32,7 +32,7 @@ TMUX_FZF_SED="/path/to/sed"
 
 ## Install via [TPM](https://github.com/tmux-plugins/tpm/)
 
-Add this line into your `$HOME/.tmux.conf`
+Add this line into your `~/.tmux.conf`
 
 ```tmux
 set -g @plugin 'sainnhe/tmux-fzf'
@@ -80,7 +80,7 @@ launch tmux-fzf -> `pane` -> `join` -> select source pane(s)
 
 You can add a custom menu to quickly execute some commands.
 
-This feature is not enabled by default. To enable it, add something like this into `$HOME/.tmux.conf`
+This feature is not enabled by default. To enable it, add something like this into `~/.tmux.conf`
 
 ```sh
 TMUX_FZF_MENU=\
@@ -113,11 +113,13 @@ For arch linux users, there is a package available in AUR: [tmux-git](https://au
 
 This feature is automatically enabled in the version >= 3.2, but you can disable it by adding `TMUX_FZF_POPUP=0` to your `~/.tmux.conf`.
 
+If your tmux version < 3.2 but you're pretty sure that your tmux supports popup window, you can force enabling it by adding `TMUX_FZF_POPUP=1` to your `~/.tmux.conf`
+
 # Customization
 
 ## key binding
 
-For example, to use `prefix` + `C-f` (Ctrl+F), add this line into your `$HOME/.tmux.conf`
+For example, to use `prefix` + `C-f` (Ctrl+F), add this line into your `~/.tmux.conf`
 
 ```tmux
 set -g @tmux-fzf-launch-key 'C-f'
@@ -129,7 +131,7 @@ This plugin will read fzf environment variables, so you can customize the behavi
 
 For more information, check [official page of fzf](https://github.com/junegunn/fzf/#environment-variables).
 
-In addition, this plugin supports options of `fzf-tmux` command which is [provided by fzf](https://github.com/junegunn/fzf#fzf-tmux-script), you can customize them by adding something like this into `$HOME/.tmux.conf`
+In addition, this plugin supports options of `fzf-tmux` command which is [provided by fzf](https://github.com/junegunn/fzf#fzf-tmux-script), you can customize them by adding something like this into `~/.tmux.conf`
 
 ```tmux
 TMUX_FZF_OPTIONS="-d 35%"
@@ -152,7 +154,7 @@ For some reasons, you may want to customize format of panes, windows, sessions l
 
 `TMUX_FZF_PANE_FORMAT`   `TMUX_FZF_WINDOW_FORMAT`   `TMUX_FZF_SESSION_FORMAT`
 
-For example, `tmux list-panes -a` doesn't show running program and window name by default. If you want to show running program and window name, add something like this into `$HOME/.tmux.conf`
+For example, `tmux list-panes -a` doesn't show running program and window name by default. If you want to show running program and window name, add something like this into `~/.tmux.conf`
 
 ```tmux
 TMUX_FZF_PANE_FORMAT="[#{window_name}] #{pane_current_command}  [#{pane_width}x#{pane_height}] [history #{history_size}/#{history_limit}, #{history_bytes} bytes] #{?pane_active,[active],[inactive]}"
@@ -165,12 +167,9 @@ For more information, check "FORMATS" section in tmux manual.
 # FAQ
 
 - **Q:** What's your status line configuration?
-
-**A:** See this [article](https://www.sainnhe.dev/post/status-line-config/).
-
+- **A:** See this [article](https://www.sainnhe.dev/post/status-line-config/).
 - **Q:** What's the color scheme used in the screenshot?
-
-**A:** [Gruvbox Material](https://github.com/gruvbox-material/gruvbox-material)
+- **A:** [Gruvbox Material](https://github.com/gruvbox-material/gruvbox-material)
 
 # License
 
