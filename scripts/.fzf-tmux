@@ -7,6 +7,15 @@ fail() {
   exit 2
 }
 
+TMUX_VERSION=$(tmux -V | grep -oE '[0-9]+\.[0-9]*')
+if (( $(echo "$TMUX_VERSION < 3.2" | bc -l) )); then
+  TMUX_FZF_POPUP=0
+else
+  TMUX_FZF_POPUP="${TMUX_FZF_POPUP:-1}"
+fi
+TMUX_FZF_POPUP_HEIGHT=${TMUX_FZF_POPUP_HEIGHT:-38%}
+TMUX_FZF_POPUP_WIDTH=${TMUX_FZF_POPUP_WIDTH:-62%}
+
 fzf="$(command -v fzf 2> /dev/null)" || fzf="$(dirname "$0")/fzf"
 [[ -x "$fzf" ]] || fail 'fzf executable not found'
 
@@ -174,22 +183,34 @@ pppid=$$
 echo -n "trap 'kill -SIGUSR1 -$pppid' EXIT SIGINT SIGTERM;" > $argsf
 close="; trap - EXIT SIGINT SIGTERM $close"
 
-if [[ -n "$term" ]] || [[ -t 0 ]]; then
-  cat <<< "\"$fzf\" $opts > $fifo2; echo \$? > $fifo3 $close" >> $argsf
-  cat $argsf
-  TMUX=$(echo $TMUX | cut -d , -f 1,2) tmux set-window-option synchronize-panes off \;\
-    set-window-option remain-on-exit off \;\
-    split-window $opt "cd $(printf %q "$PWD");$envs bash $argsf" $swap \
-    > /dev/null 2>&1
+if [[ "$TMUX_FZF_POPUP" == 0 ]]; then
+  if [[ -n "$term" ]] || [[ -t 0 ]]; then
+    cat <<< "\"$fzf\" $opts > $fifo2; echo \$? > $fifo3 $close" >> $argsf
+    cat $argsf
+    TMUX=$(echo $TMUX | cut -d , -f 1,2) tmux set-window-option synchronize-panes off \;\
+      set-window-option remain-on-exit off \;\
+      split-window $opt "cd $(printf %q "$PWD");$envs bash $argsf" $swap \
+      > /dev/null 2>&1
+  else
+    mkfifo $fifo1
+    cat <<< "\"$fzf\" $opts < $fifo1 > $fifo2; echo \$? > $fifo3 $close" >> $argsf
+    TMUX=$(echo $TMUX | cut -d , -f 1,2) tmux set-window-option synchronize-panes off \;\
+      set-window-option remain-on-exit off \;\
+      split-window $opt "$envs bash $argsf" $swap \
+      > /dev/null 2>&1
+    cat <&0 > $fifo1 &
+  fi
+  cat $fifo2
+  exit "$(cat $fifo3)"
 else
-  mkfifo $fifo1
-  cat <<< "\"$fzf\" $opts < $fifo1 > $fifo2; echo \$? > $fifo3 $close" >> $argsf
-  TMUX=$(echo $TMUX | cut -d , -f 1,2) tmux set-window-option synchronize-panes off \;\
-    set-window-option remain-on-exit off \;\
-    split-window $opt "$envs bash $argsf" $swap \
-    > /dev/null 2>&1
-  cat <&0 > $fifo1 &
+  if [[ -n "$term" ]] || [[ -t 0 ]]; then
+      cat <<<"$fzf $opts > $fifo2" >>"$argsf"
+  else
+      mkfifo "$fifo1"
+      cat <<<"$fzf $opts < $fifo1 > $fifo2" >>"$argsf"
+      cat <&0 >$fifo1 &
+  fi
+  cat "$fifo2" &
+  tmux popup -d '#{pane_current_path}' -xC -yC -w$TMUX_FZF_POPUP_WIDTH -h$TMUX_FZF_POPUP_HEIGHT -K -E -R "$envs bash $argsf"
 fi
-cat $fifo2
-exit "$(cat $fifo3)"
 
