@@ -9,7 +9,7 @@ fail() {
 
 TMUX_VERSION=$(tmux -V | grep -oE '[0-9]+\.[0-9]*')
 if (( $(echo "$TMUX_VERSION < 3.2" | bc -l) )); then
-  TMUX_FZF_POPUP=0
+  TMUX_FZF_POPUP="${TMUX_FZF_POPUP:-0}"
 else
   TMUX_FZF_POPUP="${TMUX_FZF_POPUP:-1}"
 fi
