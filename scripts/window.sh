@@ -25,7 +25,7 @@ else
     ACTION="$1"
 fi
 
-if [[ "$ACTION" == "[cancel]" ]]; then
+if [[ "$ACTION" == "[cancel]" || "$ACTION"x == ""x ]]; then
     exit
 elif [[ "$ACTION" == "link" ]]; then
     CUR_WIN=$(tmux display-message -p | $TMUX_FZF_SED -e 's/^.//' -e 's/] /:/' | grep -o '[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | $TMUX_FZF_SED 's/.$//g')
@@ -38,7 +38,7 @@ elif [[ "$ACTION" == "link" ]]; then
     else
         SRC_WIN_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     fi
-    if [[ "$SRC_WIN_ORIGIN" == "[cancel]" ]]; then
+    if [[ "$SRC_WIN_ORIGIN" == "[cancel]" || "$SRC_WIN_ORIGIN"x == ""x ]]; then
         exit
     else
         SRC_WIN=$(echo "$SRC_WIN_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | $TMUX_FZF_SED 's/.$//g')
@@ -55,7 +55,7 @@ elif [[ "$ACTION" == "move" ]]; then
     else
         SRC_WIN_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     fi
-    if [[ "$SRC_WIN_ORIGIN" == "[cancel]" ]]; then
+    if [[ "$SRC_WIN_ORIGIN" == "[cancel]" || "$SRC_WIN_ORIGIN"x == ""x ]]; then
         exit
     else
         SRC_WIN=$(echo "$SRC_WIN_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | $TMUX_FZF_SED 's/.$//g')
@@ -82,7 +82,7 @@ else
             TARGET_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         fi
     fi
-    if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
+    if [[ "$TARGET_ORIGIN" == "[cancel]" || "$TARGET_ORIGIN"x == ""x ]]; then
         exit
     else
         TARGET=$(echo "$TARGET_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | $TMUX_FZF_SED 's/.$//g')
@@ -98,7 +98,7 @@ else
             else
                 TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
             fi
-            if [[ "$TARGET_SWAP_ORIGIN" == "[cancel]" ]]; then
+            if [[ "$TARGET_SWAP_ORIGIN" == "[cancel]" || "$TARGET_SWAP_ORIGIN"x == ""x ]]; then
                 exit
             else
                 TARGET_SWAP=$(echo "$TARGET_SWAP_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | $TMUX_FZF_SED 's/.$//g')
