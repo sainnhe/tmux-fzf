@@ -12,7 +12,7 @@ else
     TARGET_ORIGIN=$(tmux list-keys | $TMUX_FZF_SED '1i [cancel]' | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
 fi
 
-if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
+if [[ "$TARGET_ORIGIN" == "[cancel]" || "$TARGET_ORIGIN"x == ""x ]]; then
     exit
 else
     if [[ $(echo "$TARGET_ORIGIN" | grep -o "copy-mode")x != ""x && $(echo "$TARGET_ORIGIN" | grep -o "prefix")x == x ]]; then

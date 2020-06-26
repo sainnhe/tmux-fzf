@@ -13,7 +13,7 @@ else
     TARGET=$(printf "[cancel]\n%s" "$TARGET_ORIGIN" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
 fi
 
-if [[ "$TARGET" == "[cancel]" ]]; then
+if [[ "$TARGET" == "[cancel]" || "$TARGET"x == ""x ]]; then
     exit
 else
     tmux command-prompt -I "$TARGET"

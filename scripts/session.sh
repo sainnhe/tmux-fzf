@@ -23,7 +23,7 @@ else
     ACTION="$1"
 fi
 
-if [[ "$ACTION" == "[cancel]" ]]; then
+if [[ "$ACTION" == "[cancel]" || "$ACTION"x == ""x ]]; then
     exit
 else
     if [[ "$ACTION" != "detach" ]]; then
@@ -59,7 +59,7 @@ else
         fi
         TARGET_ORIGIN=$(echo "$TARGET_ORIGIN" | $TMUX_FZF_SED -r "s/\[current\]/$CURRENT_SESSION_ORIGIN/")
     fi
-    if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
+    if [[ "$TARGET_ORIGIN" == "[cancel]" || "$TARGET_ORIGIN"x == ""x ]]; then
         exit
     else
         TARGET=$(echo "$TARGET_ORIGIN" | grep -o '^[[:alpha:][:digit:]_-]*:' | $TMUX_FZF_SED 's/.$//g')

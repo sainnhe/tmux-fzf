@@ -21,7 +21,7 @@ else
     TARGET=$(printf "%s\n[cancel]" "$FRONT_END_LIST" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
 fi
 
-if [[ "$TARGET" == "[cancel]" ]]; then
+if [[ "$TARGET" == "[cancel]" || "$TARGET"x == ""x ]]; then
     exit
 else
     # get the next line in $TMUX_FZF_MENU and execute

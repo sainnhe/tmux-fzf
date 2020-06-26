@@ -24,7 +24,7 @@ else
     ACTION="$1"
 fi
 
-if [[ "$ACTION" == "[cancel]" ]]; then
+if [[ "$ACTION" == "[cancel]" || "$ACTION"x == ""x ]]; then
     exit
 elif [[ "$ACTION" == "layout" ]]; then
     FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="select a layout"')
@@ -33,7 +33,7 @@ elif [[ "$ACTION" == "layout" ]]; then
     else
         TARGET_ORIGIN=$(printf "even-horizontal\neven-vertical\nmain-horizontal\nmain-vertical\ntiled\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     fi
-    if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
+    if [[ "$TARGET_ORIGIN" == "[cancel]" || "$TARGET_ORIGIN"x == ""x ]]; then
         exit
     else
         tmux select-layout "$TARGET_ORIGIN"
@@ -45,7 +45,7 @@ elif [[ "$ACTION" == "resize" ]]; then
     else
         TARGET_ORIGIN=$(printf "left\nright\nup\ndown\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     fi
-    if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
+    if [[ "$TARGET_ORIGIN" == "[cancel]" || "$TARGET_ORIGIN"x == ""x ]]; then
         exit
     elif [[ "$TARGET_ORIGIN" == "left" || "$TARGET_ORIGIN" == "right" ]]; then
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="cells to be adjusted"')
@@ -54,7 +54,7 @@ elif [[ "$ACTION" == "resize" ]]; then
         else
             SIZE=$(printf "1\n2\n3\n5\n10\n20\n30\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         fi
-        if [[ "$SIZE" == "[cancel]" ]]; then
+        if [[ "$SIZE" == "[cancel]" || "$SIZE"x == ""x ]]; then
             exit
         fi
         if [[ "$TARGET_ORIGIN" == "left" ]]; then
@@ -69,7 +69,7 @@ elif [[ "$ACTION" == "resize" ]]; then
         else
             SIZE=$(printf "1\n2\n3\n5\n10\n15\n20\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         fi
-        if [[ "$SIZE" == "[cancel]" ]]; then
+        if [[ "$SIZE" == "[cancel]" || "$SIZE"x == ""x ]]; then
             exit
         fi
         if [[ "$TARGET_ORIGIN" == "up" ]]; then
@@ -99,7 +99,7 @@ else
         fi
         TARGET_ORIGIN=$(echo "$TARGET_ORIGIN" | $TMUX_FZF_SED -r "s/\[current\]/$CURRENT_PANE_ORIGIN/")
     fi
-    if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
+    if [[ "$TARGET_ORIGIN" == "[cancel]" || "$TARGET_ORIGIN"x == ""x ]]; then
         exit
     else
         TARGET=$(echo "$TARGET_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*\.[[:digit:]]*:' | $TMUX_FZF_SED 's/.$//g')
@@ -117,7 +117,7 @@ else
             else
                 TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
             fi
-            if [[ "$TARGET_SWAP_ORIGIN" == "[cancel]" ]]; then
+            if [[ "$TARGET_SWAP_ORIGIN" == "[cancel]" || "$TARGET_SWAP_ORIGIN"x == ""x ]]; then
                 exit
             else
                 TARGET_SWAP=$(echo "$TARGET_SWAP_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*\.[[:digit:]]*:' | $TMUX_FZF_SED 's/.$//g')
