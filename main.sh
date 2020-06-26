@@ -17,7 +17,7 @@ fi
 if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
     ITEM=$(printf "%s\n[cancel]" "$ITEMS_ORIGIN" | "$CURRENT_DIR/scripts/.fzf-tmux")
 else
-    ITEM=$(printf "%s\n[cancel]" "$ITEMS_ORIGIN" | "$CURRENT_DIR/scripts/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+    ITEM=$(printf "%s\n[cancel]" "$ITEMS_ORIGIN" | bash -c "$CURRENT_DIR/scripts/.fzf-tmux $TMUX_FZF_OPTIONS")
 fi
 if [[ "$ITEM" == "[cancel]" ]]; then
     exit

@@ -10,7 +10,7 @@ TARGET_ORIGIN=$(tmux list-commands)
 if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
     TARGET=$(printf "[cancel]\n%s" "$TARGET_ORIGIN" | "$CURRENT_DIR/.fzf-tmux" | grep -o '^[^[:blank:]]*')
 else
-    TARGET=$(printf "[cancel]\n%s" "$TARGET_ORIGIN" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
+    TARGET=$(printf "[cancel]\n%s" "$TARGET_ORIGIN" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
 fi
 
 if [[ "$TARGET" == "[cancel]" ]]; then

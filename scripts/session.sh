@@ -17,7 +17,7 @@ if [[ "$1"x == ""x ]]; then
     if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
         ACTION=$(printf "attach\ndetach\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
     else
-        ACTION=$(printf "attach\ndetach\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        ACTION=$(printf "attach\ndetach\nrename\nkill\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     fi
 else
     ACTION="$1"
@@ -38,13 +38,13 @@ else
             if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
                 TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux")
             else
-                TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+                TARGET_ORIGIN=$(printf "%s\n[cancel]" "$SESSIONS" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
             fi
         else
             if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
                 TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux")
             else
-                TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+                TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$SESSIONS" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
             fi
             TARGET_ORIGIN=$(echo "$TARGET_ORIGIN" | $TMUX_FZF_SED -r "s/\[current\]/$CURRENT_SESSION_ORIGIN/")
         fi
@@ -55,7 +55,7 @@ else
         if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
             TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux")
         else
-            TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$SESSIONS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$SESSIONS" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         fi
         TARGET_ORIGIN=$(echo "$TARGET_ORIGIN" | $TMUX_FZF_SED -r "s/\[current\]/$CURRENT_SESSION_ORIGIN/")
     fi

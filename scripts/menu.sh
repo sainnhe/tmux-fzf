@@ -18,7 +18,7 @@ FRONT_END_LIST=$(echo -e "$FRONT_END_LIST" | $TMUX_FZF_SED '/^[[:space:]]*$/d')
 if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
     TARGET=$(printf "[cancel]\n%s" "$FRONT_END_LIST" | "$CURRENT_DIR/.fzf-tmux" | grep -o '^[^[:blank:]]*')
 else
-    TARGET=$(printf "%s\n[cancel]" "$FRONT_END_LIST" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
+    TARGET=$(printf "%s\n[cancel]" "$FRONT_END_LIST" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
 fi
 
 if [[ "$TARGET" == "[cancel]" ]]; then
