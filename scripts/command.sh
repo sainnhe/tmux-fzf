@@ -5,7 +5,7 @@ FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="se
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 TARGET_ORIGIN=$(tmux list-commands)
-TARGET=$(printf "[cancel]\n%s" "$TARGET_ORIGIN" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
+TARGET=$(printf "[cancel]\n%s" "$TARGET_ORIGIN" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
 
 [[ "$TARGET" == "[cancel]" || -z "$TARGET" ]] && exit
 tmux command-prompt -I "$TARGET"
