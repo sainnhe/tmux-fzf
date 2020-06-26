@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ "$TMUX_FZF_SED"x == ""x ]]; then
-    TMUX_FZF_SED="sed"
-fi
+TMUX_FZF_SED="${TMUX_FZF_SED:-sed}"
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # get front end list
@@ -15,15 +13,8 @@ while [[ $(echo -e "$TMUX_FZF_MENU_ORIGIN" | wc -l) != "0" && $(echo -e "$TMUX_F
 done
 FRONT_END_LIST=$(echo -e "$FRONT_END_LIST" | $TMUX_FZF_SED '/^[[:space:]]*$/d')
 
-if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
-    TARGET=$(printf "[cancel]\n%s" "$FRONT_END_LIST" | "$CURRENT_DIR/.fzf-tmux" | grep -o '^[^[:blank:]]*')
-else
-    TARGET=$(printf "%s\n[cancel]" "$FRONT_END_LIST" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
-fi
+TARGET=$(printf "%s\n[cancel]" "$FRONT_END_LIST" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
 
-if [[ "$TARGET" == "[cancel]" || "$TARGET"x == ""x ]]; then
-    exit
-else
-    # get the next line in $TMUX_FZF_MENU and execute
-    echo -e "$TMUX_FZF_MENU" | $TMUX_FZF_SED -n "/$TARGET/{n;p;}" | xargs -i tmux -c {}
-fi
+[[ "$TARGET" == "[cancel]" || -z "$TARGET" ]] && exit
+# get the next line in $TMUX_FZF_MENU and execute
+echo -e "$TMUX_FZF_MENU" | $TMUX_FZF_SED -n "/$TARGET/{n;p;}" | xargs -i tmux -c {}
