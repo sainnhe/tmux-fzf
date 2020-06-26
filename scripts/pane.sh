@@ -13,7 +13,7 @@ fi
 
 FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="select an action"')
 if [[ -z "$1" ]]; then
-    ACTION=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\nresize\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+    ACTION=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\nresize\n[cancel]" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
 else
     ACTION="$1"
 fi
@@ -21,16 +21,16 @@ fi
 [[ "$ACTION" == "[cancel]" || -z "$ACTION" ]] && exit
 if [[ "$ACTION" == "layout" ]]; then
     FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="select a layout"')
-    TARGET_ORIGIN=$(printf "even-horizontal\neven-vertical\nmain-horizontal\nmain-vertical\ntiled\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+    TARGET_ORIGIN=$(printf "even-horizontal\neven-vertical\nmain-horizontal\nmain-vertical\ntiled\n[cancel]" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     [[ "$TARGET_ORIGIN" == "[cancel]" || -z "$TARGET_ORIGIN" ]] && exit
     tmux select-layout "$TARGET_ORIGIN"
 elif [[ "$ACTION" == "resize" ]]; then
     FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="select direction"')
-    TARGET_ORIGIN=$(printf "left\nright\nup\ndown\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+    TARGET_ORIGIN=$(printf "left\nright\nup\ndown\n[cancel]" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     [[ "$TARGET_ORIGIN" == "[cancel]" || -z "$TARGET_ORIGIN" ]] && exit
     if [[ "$TARGET_ORIGIN" == "left" || "$TARGET_ORIGIN" == "right" ]]; then
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="cells to be adjusted"')
-        SIZE=$(printf "1\n2\n3\n5\n10\n20\n30\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        SIZE=$(printf "1\n2\n3\n5\n10\n20\n30\n[cancel]" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         [[ "$SIZE" == "[cancel]" || -z "$SIZE" ]] && exit
         if [[ "$TARGET_ORIGIN" == "left" ]]; then
             tmux resize-pane -L "$SIZE"
@@ -39,7 +39,7 @@ elif [[ "$ACTION" == "resize" ]]; then
         fi
     elif [[ "$TARGET_ORIGIN" == "up" || "$TARGET_ORIGIN" == "down" ]]; then
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="lines to be adjusted"')
-        SIZE=$(printf "1\n2\n3\n5\n10\n15\n20\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        SIZE=$(printf "1\n2\n3\n5\n10\n15\n20\n[cancel]" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         [[ "$SIZE" == "[cancel]" || -z "$SIZE" ]] && exit
         if [[ "$TARGET_ORIGIN" == "up" ]]; then
             tmux resize-pane -U "$SIZE"
@@ -55,9 +55,9 @@ else
     fi
     if [[ "$ACTION" == "switch" || "$ACTION" == "join" ]]; then
         PANES=$(echo "$PANES" | grep -v "^$CURRENT_PANE")
-        TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     else
-        TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$PANES" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$PANES" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         TARGET_ORIGIN=$(echo "$TARGET_ORIGIN" | $TMUX_FZF_SED -r "s/\[current\]/$CURRENT_PANE_ORIGIN/")
     fi
     [[ "$TARGET_ORIGIN" == "[cancel]" || -z "$TARGET_ORIGIN" ]] && exit
@@ -71,7 +71,7 @@ else
     elif [[ "$ACTION" == "swap" ]]; then
         PANES=$(echo "$PANES" | grep -v "^$TARGET")
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="select another target pane"')
-        TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         [[ "$TARGET_SWAP_ORIGIN" == "[cancel]" || -z "$TARGET_SWAP_ORIGIN" ]] && exit
         TARGET_SWAP=$(echo "$TARGET_SWAP_ORIGIN" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*\.[[:digit:]]*:' | $TMUX_FZF_SED 's/.$//g')
         tmux swap-pane -s "$TARGET" -t "$TARGET_SWAP"

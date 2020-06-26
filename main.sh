@@ -12,7 +12,7 @@ if [[ -z "$TMUX_FZF_MENU" ]]; then
 else
     ITEMS_ORIGIN=$(printf "menu\nsession\nwindow\npane\ncommand\nkeybinding")
 fi
-ITEM=$(printf "%s\n[cancel]" "$ITEMS_ORIGIN" | bash -c "$CURRENT_DIR/scripts/.fzf-tmux $TMUX_FZF_OPTIONS")
+ITEM=$(printf "%s\n[cancel]" "$ITEMS_ORIGIN" | eval "$CURRENT_DIR/scripts/.fzf-tmux $TMUX_FZF_OPTIONS")
 [[ "$ITEM" == "[cancel]" || -z "$ITEM" ]] && exit
 ITEM=$(echo "$CURRENT_DIR/scripts/$ITEM" | $TMUX_FZF_SED 's/$/.sh/')
 tmux run-shell -b "$ITEM"
