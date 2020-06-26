@@ -18,7 +18,7 @@ if [[ "$1"x == ""x ]]; then
     if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
         ACTION=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\nresize\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
     else
-        ACTION=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\nresize\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        ACTION=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\nresize\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     fi
 else
     ACTION="$1"
@@ -31,7 +31,7 @@ elif [[ "$ACTION" == "layout" ]]; then
     if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
         TARGET_ORIGIN=$(printf "even-horizontal\neven-vertical\nmain-horizontal\nmain-vertical\ntiled\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
     else
-        TARGET_ORIGIN=$(printf "even-horizontal\neven-vertical\nmain-horizontal\nmain-vertical\ntiled\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        TARGET_ORIGIN=$(printf "even-horizontal\neven-vertical\nmain-horizontal\nmain-vertical\ntiled\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     fi
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
@@ -43,7 +43,7 @@ elif [[ "$ACTION" == "resize" ]]; then
     if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
         TARGET_ORIGIN=$(printf "left\nright\nup\ndown\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
     else
-        TARGET_ORIGIN=$(printf "left\nright\nup\ndown\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        TARGET_ORIGIN=$(printf "left\nright\nup\ndown\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     fi
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
         exit
@@ -52,7 +52,7 @@ elif [[ "$ACTION" == "resize" ]]; then
         if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
             SIZE=$(printf "1\n2\n3\n5\n10\n20\n30\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
         else
-            SIZE=$(printf "1\n2\n3\n5\n10\n20\n30\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            SIZE=$(printf "1\n2\n3\n5\n10\n20\n30\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         fi
         if [[ "$SIZE" == "[cancel]" ]]; then
             exit
@@ -67,7 +67,7 @@ elif [[ "$ACTION" == "resize" ]]; then
         if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
             SIZE=$(printf "1\n2\n3\n5\n10\n15\n20\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
         else
-            SIZE=$(printf "1\n2\n3\n5\n10\n15\n20\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            SIZE=$(printf "1\n2\n3\n5\n10\n15\n20\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         fi
         if [[ "$SIZE" == "[cancel]" ]]; then
             exit
@@ -89,13 +89,13 @@ else
         if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
             TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux")
         else
-            TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            TARGET_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         fi
     else
         if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
             TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux")
         else
-            TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$PANES" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         fi
         TARGET_ORIGIN=$(echo "$TARGET_ORIGIN" | $TMUX_FZF_SED -r "s/\[current\]/$CURRENT_PANE_ORIGIN/")
     fi
@@ -115,7 +115,7 @@ else
             if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
                 TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux")
             else
-                TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+                TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$PANES" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
             fi
             if [[ "$TARGET_SWAP_ORIGIN" == "[cancel]" ]]; then
                 exit

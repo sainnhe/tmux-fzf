@@ -19,7 +19,7 @@ if [[ "$1"x == ""x ]]; then
     if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
         ACTION=$(printf "switch\nlink\nmove\nswap\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux")
     else
-        ACTION=$(printf "switch\nlink\nmove\nswap\nrename\nkill\n[cancel]" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        ACTION=$(printf "switch\nlink\nmove\nswap\nrename\nkill\n[cancel]" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     fi
 else
     ACTION="$1"
@@ -36,7 +36,7 @@ elif [[ "$ACTION" == "link" ]]; then
     if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
         SRC_WIN_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux")
     else
-        SRC_WIN_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        SRC_WIN_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     fi
     if [[ "$SRC_WIN_ORIGIN" == "[cancel]" ]]; then
         exit
@@ -53,7 +53,7 @@ elif [[ "$ACTION" == "move" ]]; then
     if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
         SRC_WIN_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux")
     else
-        SRC_WIN_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+        SRC_WIN_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     fi
     if [[ "$SRC_WIN_ORIGIN" == "[cancel]" ]]; then
         exit
@@ -71,7 +71,7 @@ else
         if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
             TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux")
         else
-            TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            TARGET_ORIGIN=$(printf "[current]\n%s\n[cancel]" "$WINDOWS" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         fi
         TARGET_ORIGIN=$(echo "$TARGET_ORIGIN" | $TMUX_FZF_SED -r "s/\[current\]/$CURRENT_WINDOW_ORIGIN/")
     else
@@ -79,7 +79,7 @@ else
         if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
             TARGET_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux")
         else
-            TARGET_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+            TARGET_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
         fi
     fi
     if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
@@ -96,7 +96,7 @@ else
             if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
                 TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux")
             else
-                TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+                TARGET_SWAP_ORIGIN=$(printf "%s\n[cancel]" "$WINDOWS" | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
             fi
             if [[ "$TARGET_SWAP_ORIGIN" == "[cancel]" ]]; then
                 exit

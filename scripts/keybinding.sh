@@ -9,7 +9,7 @@ CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [[ "$TMUX_FZF_OPTIONS"x == ""x ]]; then
     TARGET_ORIGIN=$(tmux list-keys | $TMUX_FZF_SED '1i [cancel]' | "$CURRENT_DIR/.fzf-tmux")
 else
-    TARGET_ORIGIN=$(tmux list-keys | $TMUX_FZF_SED '1i [cancel]' | "$CURRENT_DIR/.fzf-tmux" "$TMUX_FZF_OPTIONS")
+    TARGET_ORIGIN=$(tmux list-keys | $TMUX_FZF_SED '1i [cancel]' | bash -c "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
 fi
 
 if [[ "$TARGET_ORIGIN" == "[cancel]" ]]; then
