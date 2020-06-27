@@ -171,6 +171,10 @@ For more information, check "FORMATS" section in tmux manual.
 - **Q:** What's the color scheme used in the screenshot?
 - **A:** [Gruvbox Material](https://github.com/gruvbox-material/gruvbox-material)
 
+# More plugin
+
+- [sainnhe/tmux-translator](https://github.com/sainnhe/tmux-translator): A translation plugin powered by popup window.
+
 # License
 
 [MIT](./LICENSE) && [Anti-996](./Anti-996-LICENSE)
