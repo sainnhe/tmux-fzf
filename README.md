@@ -32,7 +32,7 @@ TMUX_FZF_SED="/path/to/sed"
 
 ## Install via [TPM](https://github.com/tmux-plugins/tpm/)
 
-Add this line into your `~/.tmux.conf`
+Add this line to your `~/.tmux.conf`
 
 ```tmux
 set -g @plugin 'sainnhe/tmux-fzf'
@@ -72,7 +72,7 @@ Btw, if you want to bind a key to kill current window, I would recommend `unlink
 
 launch tmux-fzf -> `pane` -> `break` -> select source pane
 
-**join** action is like split-window, but instead of splitting destination pane and creating a new pane, it will split it and move source pane into the current window. This can be used to reverse break-pane.
+**join** action is like split-window, but instead of splitting destination pane and creating a new pane, it will split it and move source pane to the current window. This can be used to reverse break-pane.
 
 launch tmux-fzf -> `pane` -> `join` -> select source pane(s)
 
@@ -80,7 +80,7 @@ launch tmux-fzf -> `pane` -> `join` -> select source pane(s)
 
 You can add a custom menu to quickly execute some commands.
 
-This feature is not enabled by default. To enable it, add something like this into `~/.tmux.conf`
+This feature is not enabled by default. To enable it, add something like this to `~/.tmux.conf`
 
 ```sh
 TMUX_FZF_MENU=\
@@ -119,7 +119,7 @@ If your tmux version < 3.2 but you're pretty sure that your tmux supports popup 
 
 ## key binding
 
-For example, to use `prefix` + `C-f` (Ctrl+F), add this line into your `~/.tmux.conf`
+For example, to use `prefix` + `C-f` (Ctrl+F), add this line to your `~/.tmux.conf`
 
 ```tmux
 set -g @tmux-fzf-launch-key 'C-f'
@@ -131,7 +131,7 @@ This plugin will read fzf environment variables, so you can customize the behavi
 
 For more information, check [official page of fzf](https://github.com/junegunn/fzf/#environment-variables).
 
-In addition, this plugin supports options of `fzf-tmux` command which is [provided by fzf](https://github.com/junegunn/fzf#fzf-tmux-script), you can customize them by adding something like this into `~/.tmux.conf`
+In addition, this plugin supports options of `fzf-tmux` command which is [provided by fzf](https://github.com/junegunn/fzf#fzf-tmux-script), you can customize them by adding something like this to `~/.tmux.conf`
 
 ```tmux
 TMUX_FZF_OPTIONS="-d 35%"
@@ -154,7 +154,7 @@ For some reasons, you may want to customize format of panes, windows, sessions l
 
 `TMUX_FZF_PANE_FORMAT`   `TMUX_FZF_WINDOW_FORMAT`   `TMUX_FZF_SESSION_FORMAT`
 
-For example, `tmux list-panes -a` doesn't show running program and window name by default. If you want to show running program and window name, add something like this into `~/.tmux.conf`
+For example, `tmux list-panes -a` doesn't show running program and window name by default. If you want to show running program and window name, add something like this to `~/.tmux.conf`
 
 ```tmux
 TMUX_FZF_PANE_FORMAT="[#{window_name}] #{pane_current_command}  [#{pane_width}x#{pane_height}] [history #{history_size}/#{history_limit}, #{history_bytes} bytes] #{?pane_active,[active],[inactive]}"
