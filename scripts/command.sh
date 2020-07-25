@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 TMUX_FZF_SED="${TMUX_FZF_SED:-sed}"
-FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -r -e '$a --header="select a command"')
+FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | $TMUX_FZF_SED -E -e '$a --header="select a command"')
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 TARGET_ORIGIN=$(tmux list-commands)
