@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+[[ -z "$TMUX_FZF_ORDER" ]] && TMUX_FZF_ORDER="session|window|pane|command|keybinding"
 
+items_origin="$(echo $TMUX_FZF_ORDER | sed 's/|/\n/g')"
 if [[ -z "$TMUX_FZF_MENU" ]]; then
-    items_origin=$(printf "session\nwindow\npane\ncommand\nkeybinding")
+    item=$(printf "%s\n[cancel]" "$items_origin" | eval "$CURRENT_DIR/scripts/.fzf-tmux $TMUX_FZF_OPTIONS")
 else
-    items_origin=$(printf "menu\nsession\nwindow\npane\ncommand\nkeybinding")
+    item=$(printf "menu\n%s\n[cancel]" "$items_origin" | eval "$CURRENT_DIR/scripts/.fzf-tmux $TMUX_FZF_OPTIONS")
 fi
-item=$(printf "%s\n[cancel]" "$items_origin" | eval "$CURRENT_DIR/scripts/.fzf-tmux $TMUX_FZF_OPTIONS")
 [[ "$item" == "[cancel]" || -z "$item" ]] && exit
 item=$(echo "$CURRENT_DIR/scripts/$item" | sed -E 's/$/.sh/')
 tmux run-shell -b "$item"

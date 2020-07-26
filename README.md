@@ -1,4 +1,4 @@
-![](https://gitlab.com/sainnhe/img/-/raw/master/tmux-fzf.gif)
+![demo](https://gitlab.com/sainnhe/img/-/raw/master/tmux-fzf.gif)
 
 # Features
 
@@ -73,7 +73,7 @@ You can add a custom menu to quickly execute some commands.
 
 This feature is not enabled by default. To enable it, add something like this to `~/.tmux.conf`
 
-```sh
+```shell
 TMUX_FZF_MENU=\
 "foo\necho 'Hello!'\n"\
 "bar\nls ~\n"\
@@ -134,9 +134,17 @@ To list all available `fzf-tmux` options, execute `fzf-tmux --help` in your shel
 
 To adjust the width and height of popup window, add something like this to your `~/.tmux.conf`:
 
-```
+```shell
 TMUX_FZF_POPUP_HEIGHT="38%"
 TMUX_FZF_POPUP_WIDTH="62%"
+```
+
+## order
+
+To customize the order of the items, add something like this to your `~/.tmux.conf`:
+
+```shell
+TMUX_FZF_ORDER="session|window|pane|command|keybinding"
 ```
 
 ## format
