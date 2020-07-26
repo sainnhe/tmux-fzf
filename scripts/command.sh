@@ -3,8 +3,8 @@
 FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="select a command"')
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-TARGET_ORIGIN=$(tmux list-commands)
-TARGET=$(printf "[cancel]\n%s" "$TARGET_ORIGIN" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
+target_origin=$(tmux list-commands)
+target=$(printf "[cancel]\n%s" "$target_origin" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
 
-[[ "$TARGET" == "[cancel]" || -z "$TARGET" ]] && exit
-tmux command-prompt -I "$TARGET"
+[[ "$target" == "[cancel]" || -z "$target" ]] && exit
+tmux command-prompt -I "$target"
