@@ -19,9 +19,7 @@
 - [GNU sed](https://www.gnu.org/software/sed/)
 - [junegunn/fzf](https://github.com/junegunn/fzf/)
 
-**Note:**
-
-1. Please use this command to check whether tmux is able to find fzf [#1](https://github.com/sainnhe/tmux-fzf/issues/1): `tmux run-shell -b 'command -v fzf'`
+**Note:** Please use this command to check whether tmux is able to find fzf [#1](https://github.com/sainnhe/tmux-fzf/issues/1): `tmux run-shell -b 'command -v fzf'`
 
 ## Install via [TPM](https://github.com/tmux-plugins/tpm/)
 
