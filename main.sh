@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
 TMUX_FZF_SED="${TMUX_FZF_SED:-sed}"
-if [[ "$($TMUX_FZF_SED --version 2>/dev/null | head -n 1 | grep -o GNU)" != "GNU" ]]; then
-    tmux run-shell -b 'echo "Unable to find executable GNU sed."'
-    exit 1
-fi
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [[ -z "$TMUX_FZF_MENU" ]]; then

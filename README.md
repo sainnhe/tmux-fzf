@@ -22,13 +22,6 @@
 **Note:**
 
 1. Please use this command to check whether tmux is able to find fzf [#1](https://github.com/sainnhe/tmux-fzf/issues/1): `tmux run-shell -b 'command -v fzf'`
-2. Currently this plugin is only compatible with GNU sed. Other sed variants such as Mac OS sed or FreeBSD sed are not supported. You need to ensure that this plugin is using GNU sed(see [#5](https://github.com/sainnhe/tmux-fzf/issues/5) for steps to install GNU sed on Mac OS).
-
-If you don't want to make GNU sed the system default, but instead customize the executable path, then add this line to your `~/.tmux.conf`
-
-```tmux
-TMUX_FZF_SED="/path/to/sed"
-```
 
 ## Install via [TPM](https://github.com/tmux-plugins/tpm/)
 
