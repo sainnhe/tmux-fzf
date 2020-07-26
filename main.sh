@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-TMUX_FZF_SED="${TMUX_FZF_SED:-sed}"
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [[ -z "$TMUX_FZF_MENU" ]]; then
@@ -10,5 +9,5 @@ else
 fi
 ITEM=$(printf "%s\n[cancel]" "$ITEMS_ORIGIN" | eval "$CURRENT_DIR/scripts/.fzf-tmux $TMUX_FZF_OPTIONS")
 [[ "$ITEM" == "[cancel]" || -z "$ITEM" ]] && exit
-ITEM=$(echo "$CURRENT_DIR/scripts/$ITEM" | $TMUX_FZF_SED 's/$/.sh/')
+ITEM=$(echo "$CURRENT_DIR/scripts/$ITEM" | sed -E 's/$/.sh/')
 tmux run-shell -b "$ITEM"
