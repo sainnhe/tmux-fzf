@@ -3,7 +3,7 @@
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 [[ -z "$TMUX_FZF_ORDER" ]] && TMUX_FZF_ORDER="session|window|pane|command|keybinding"
 
-items_origin="$(echo $TMUX_FZF_ORDER | sed 's/|/\n/g')"
+items_origin="$(echo $TMUX_FZF_ORDER | tr '|' '\n')"
 if [[ -z "$TMUX_FZF_MENU" ]]; then
     item=$(printf "%s\n[cancel]" "$items_origin" | eval "$CURRENT_DIR/scripts/.fzf-tmux $TMUX_FZF_OPTIONS")
 else
