@@ -8,10 +8,11 @@ fail() {
 }
 
 TMUX_VERSION=$(tmux -V | grep -oE '[0-9]+\.[0-9]*')
-if (( $(echo "$TMUX_VERSION < 3.2" | bc -l) )); then
-  TMUX_FZF_POPUP="${TMUX_FZF_POPUP:-0}"
-else
+version='3.1'
+if [ ${TMUX_VERSION%.*} -eq ${version%.*} ] && [ ${TMUX_VERSION#*.} \> ${version#*.} ] || [ ${TMUX_VERSION%.*} -gt ${version%.*} ]; then
   TMUX_FZF_POPUP="${TMUX_FZF_POPUP:-1}"
+else
+  TMUX_FZF_POPUP="${TMUX_FZF_POPUP:-0}"
 fi
 TMUX_FZF_POPUP_HEIGHT=${TMUX_FZF_POPUP_HEIGHT:-38%}
 TMUX_FZF_POPUP_WIDTH=${TMUX_FZF_POPUP_WIDTH:-62%}
