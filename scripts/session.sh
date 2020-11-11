@@ -25,7 +25,7 @@ if [[ "$action" != "detach" ]]; then
     fi
     if [[ "$action" == "attach" ]]; then
         tmux_attached_sessions=$(tmux list-sessions | grep 'attached' | grep -o '^[[:alpha:][:digit:]_-]*:' | sed 's/.$//g')
-        sessions=$(echo "$sessions" | grep -v "^$tmux_attached_sessions")
+        sessions=$(echo "$sessions" | grep -v "^$tmux_attached_sessions: ")
         target_origin=$(printf "%s\n[cancel]" "$sessions" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     else
         target_origin=$(printf "[current]\n%s\n[cancel]" "$sessions" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
