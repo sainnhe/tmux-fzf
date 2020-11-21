@@ -6,7 +6,7 @@ CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 tmux_fzf_menu_origin=$TMUX_FZF_MENU
 front_end_list=$(echo -e "$tmux_fzf_menu_origin" | sed -n '1p')
 tmux_fzf_menu_origin=$(echo -e "$tmux_fzf_menu_origin" | sed '1,2d')
-while [[ $(echo -e "$tmux_fzf_menu_origin" | wc -l) != "0" && $(echo -e "$tmux_fzf_menu_origin" | wc -l) != "1" ]]; do
+while [[ $(echo -e "$tmux_fzf_menu_origin" | wc -l | xargs) != "0" && $(echo -e "$tmux_fzf_menu_origin" | wc -l | xargs) != "1" ]]; do
     front_end_list="$front_end_list\n"$(echo -e "$tmux_fzf_menu_origin" | sed -n '1p')
     tmux_fzf_menu_origin=$(echo -e "$tmux_fzf_menu_origin" | sed '1,2d')
 done
