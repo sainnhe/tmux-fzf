@@ -12,7 +12,7 @@ while [[ $(echo -e "$tmux_fzf_menu_origin" | wc -l) != "0" && $(echo -e "$tmux_f
 done
 front_end_list=$(echo -e "$front_end_list" | sed '/^[[:space:]]*$/d')
 
-target=$(printf "%s\n[cancel]" "$front_end_list" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS" | grep -o '^[^[:blank:]]*')
+target=$(printf "%s\n[cancel]" "$front_end_list" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
 
 [[ "$target" == "[cancel]" || -z "$target" ]] && exit
 # get the next line in $TMUX_FZF_MENU and execute
