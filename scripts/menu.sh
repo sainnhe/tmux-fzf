@@ -16,4 +16,4 @@ target=$(printf "%s\n[cancel]" "$front_end_list" | eval "$CURRENT_DIR/.fzf-tmux 
 
 [[ "$target" == "[cancel]" || -z "$target" ]] && exit
 # get the next line in $TMUX_FZF_MENU and execute
-echo -e "$TMUX_FZF_MENU" | sed -n "/$target/{n;p;}" | xargs -i tmux -c {}
+echo -e "$TMUX_FZF_MENU" | sed -n "/$target/{n;p;}" | xargs -I{} tmux -c {}
