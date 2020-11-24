@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FZF_TMUX=$(which fzf-tmux)
+FZF_TMUX=${FZF_TMUX:-$CURRENT_DIR/.fzf-tmux}
 
 current_session=$(tmux list-sessions | grep 'attached')
 if [[ -z "$TMUX_FZF_SESSION_FORMAT" ]]; then
@@ -11,7 +13,7 @@ fi
 
 FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select an action."')
 if [[ -z "$1" ]]; then
-    action=$(printf "attach\ndetach\nrename\nkill\n[cancel]" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+    action=$(printf "attach\ndetach\nrename\nkill\n[cancel]" | eval "$FZF_TMUX $TMUX_FZF_OPTIONS")
 else
     action="$1"
 fi
@@ -26,16 +28,16 @@ if [[ "$action" != "detach" ]]; then
     if [[ "$action" == "attach" ]]; then
         tmux_attached_sessions=$(tmux list-sessions | grep 'attached' | grep -o '^[[:alpha:][:digit:]_-]*:' | sed 's/.$//g')
         sessions=$(echo "$sessions" | grep -v "^$tmux_attached_sessions: ")
-        target_origin=$(printf "%s\n[cancel]" "$sessions" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        target_origin=$(printf "%s\n[cancel]" "$sessions" | eval "$FZF_TMUX $TMUX_FZF_OPTIONS")
     else
-        target_origin=$(printf "[current]\n%s\n[cancel]" "$sessions" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        target_origin=$(printf "[current]\n%s\n[cancel]" "$sessions" | eval "$FZF_TMUX $TMUX_FZF_OPTIONS")
         target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_session/")
     fi
 else
     tmux_attached_sessions=$(tmux list-sessions | grep 'attached' | grep -o '^[[:alpha:][:digit:]_-]*:' | sed 's/.$//g')
     sessions=$(echo "$sessions" | grep "^$tmux_attached_sessions")
     FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select target session(s). Press TAB to mark multiple items."')
-    target_origin=$(printf "[current]\n%s\n[cancel]" "$sessions" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+    target_origin=$(printf "[current]\n%s\n[cancel]" "$sessions" | eval "$FZF_TMUX $TMUX_FZF_OPTIONS")
     target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_session/")
 fi
 [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit

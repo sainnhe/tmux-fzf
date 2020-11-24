@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FZF_TMUX=$(which fzf-tmux)
+FZF_TMUX=${FZF_TMUX:-$CURRENT_DIR/.fzf-tmux}
 
 # get front end list
 tmux_fzf_menu_origin=$TMUX_FZF_MENU
@@ -12,7 +14,7 @@ while [[ $(echo -e "$tmux_fzf_menu_origin" | wc -l | xargs) != "0" && $(echo -e 
 done
 front_end_list=$(echo -e "$front_end_list" | sed '/^[[:space:]]*$/d')
 
-target=$(printf "%s\n[cancel]" "$front_end_list" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+target=$(printf "%s\n[cancel]" "$front_end_list" | eval "$FZF_TMUX $TMUX_FZF_OPTIONS")
 
 [[ "$target" == "[cancel]" || -z "$target" ]] && exit
 # get the next line in $TMUX_FZF_MENU and execute
