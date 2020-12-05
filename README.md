@@ -19,7 +19,7 @@
 - [GNU bash](https://www.gnu.org/software/bash/)
 - [GNU sed](https://www.gnu.org/software/sed/)
 - [junegunn/fzf](https://github.com/junegunn/fzf/)
-- [python](https://www.python.org/) (optional for accessing the system clipboard)
+- [mrichar1/clipster#installation](https://github.com/mrichar1/clipster#installation) (optional for accessing the system clipboard)
 
 **Note:** Please use this command to check whether tmux is able to find fzf [#1](https://github.com/sainnhe/tmux-fzf/issues/1): `tmux run-shell -b 'command -v fzf'`
 

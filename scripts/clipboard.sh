@@ -3,7 +3,7 @@
 FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select clipboard history"')
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if ! [ -x "$(command -v python)" ]; then
+if ! [ -f "$CURRENT_DIR/../.temp" ]; then
     action="buffer"
 elif [[ -z "$1" ]]; then
     action=$(printf "all\nbuffer\nsystem\n[cancel]" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
