@@ -12,7 +12,13 @@ else
 fi
 
 if [[ "$action" == "system" ]]; then
-    system_clipboard_history=$(copyq read 0 1 2 3 4 5 6 7 8 9 | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+    item_numbers=$(copyq count)
+    index=0
+    while [ "$index" -lt "$item_numbers" ]; do
+        copyq_read="$copyq_read $index"
+        index=$((index + 1))
+    done
+    system_clipboard_history=$(eval "copyq read ${copyq_read}" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
     [[ -z "${system_clipboard_history}" ]] && exit
     tmux send-keys -l "${system_clipboard_history}"
 elif [[ "$action" == "buffer" ]]; then
