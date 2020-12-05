@@ -8,6 +8,7 @@
 - Multiple selection (support for actions marked by *).
 - Search commands and append to command prompt.
 - Search key bindings and execute.
+- Search clipboard history and paste to current window.
 - User menu.
 - [Popup window](https://github.com/tmux/tmux/issues/1842) support.
 
@@ -18,6 +19,7 @@
 - [GNU bash](https://www.gnu.org/software/bash/)
 - [GNU sed](https://www.gnu.org/software/sed/)
 - [junegunn/fzf](https://github.com/junegunn/fzf/)
+- [python](https://www.python.org/) (optional for accessing the system clipboard)
 
 **Note:** Please use this command to check whether tmux is able to find fzf [#1](https://github.com/sainnhe/tmux-fzf/issues/1): `tmux run-shell -b 'command -v fzf'`
 
@@ -176,4 +178,6 @@ For more information, check "FORMATS" section in tmux manual.
 
 # License
 
-[MIT](./LICENSE) && [Anti-996](./Anti-996-LICENSE)
+For the code in [/scripts/clipboard](./scripts/clipboard), see [mrichar1/clipster](https://github.com/mrichar1/clipster).
+
+Other code is distributed under [MIT](./LICENSE) && [Anti-996](./Anti-996-LICENSE).

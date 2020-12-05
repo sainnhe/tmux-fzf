@@ -2,6 +2,8 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+tmux run -b "$CURRENT_DIR/daemon.sh $CURRENT_DIR"
+
 source "$CURRENT_DIR/settings.sh"
 
 set_launch_bindings() {
