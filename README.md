@@ -19,7 +19,7 @@
 - [GNU bash](https://www.gnu.org/software/bash/)
 - [GNU sed](https://www.gnu.org/software/sed/)
 - [junegunn/fzf](https://github.com/junegunn/fzf/)
-- (optional for accessing system clipboard) GTK >= 3.20 and pygobject, see the requirements in [mrichar1/clipster#installation](https://github.com/mrichar1/clipster#installation).
+- [CopyQ](https://github.com/hluk/CopyQ) (optional for accessing system clipboard)
 
 **Note:** Please use this command to check whether tmux is able to find fzf [#1](https://github.com/sainnhe/tmux-fzf/issues/1): `tmux run-shell -b 'command -v fzf'`
 
@@ -177,7 +177,5 @@ For more information, check "FORMATS" section in tmux manual.
 - [sainnhe/tmux-translator](https://github.com/sainnhe/tmux-translator): A translation plugin powered by popup window.
 
 # License
-
-For the code in [/scripts/clipboard](./scripts/clipboard), see [mrichar1/clipster](https://github.com/mrichar1/clipster).
 
 Other code is distributed under [MIT](./LICENSE) && [Anti-996](./Anti-996-LICENSE).
