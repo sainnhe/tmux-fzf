@@ -2,7 +2,9 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-tmux run -b "$CURRENT_DIR/daemon.sh $CURRENT_DIR"
+if [ -x "$(command -v copyq)" ]; then
+  copyq &>/dev/null &
+fi
 
 source "$CURRENT_DIR/settings.sh"
 
