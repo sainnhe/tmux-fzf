@@ -6,14 +6,5 @@ if [ -x "$(command -v copyq)" ]; then
   copyq &>/dev/null &
 fi
 
-source "$CURRENT_DIR/settings.sh"
-
-set_launch_bindings() {
-	local key_bindings=$(get_tmux_option "$launch_key" "$default_launch_key")
-	local key
-	for key in $key_bindings; do
-		tmux bind-key "$key" run-shell -b "$CURRENT_DIR/main.sh"
-	done
-}
-
-set_launch_bindings
+[ -z "$TMUX_FZF_LAUNCH_KEY" ] && TMUX_FZF_LAUNCH_KEY="F"
+tmux bind-key "$TMUX_FZF_LAUNCH_KEY" run-shell -b "$CURRENT_DIR/main.sh"

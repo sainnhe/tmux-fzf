@@ -115,7 +115,7 @@ If your tmux version < 3.2 but you're pretty sure that your tmux supports popup 
 For example, to use `prefix` + `C-f` (Ctrl+F), add this line to your `~/.tmux.conf`
 
 ```tmux
-set -g @tmux-fzf-launch-key 'C-f'
+TMUX_FZF_LAUNCH_KEY="C-f"
 ```
 
 ## fzf behavior
