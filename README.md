@@ -5,6 +5,7 @@
 - Manage sessions (attach, detach*, rename, kill*).
 - Manage windows (switch, link, move, swap, rename, kill*).
 - Manage panes (switch, break, join*, swap, layout, kill*, resize).
+- Preview sessions, windows and panes.
 - Multiple selection (support for actions marked by *).
 - Search commands and append to command prompt.
 - Search key bindings and execute.
@@ -75,7 +76,7 @@ You can add a custom menu to quickly execute some commands.
 
 This feature is not enabled by default. To enable it, add something like this to `~/.tmux.conf`
 
-```shell
+```tmux
 TMUX_FZF_MENU=\
 "foo\necho 'Hello!'\n"\
 "bar\nls ~\n"\
@@ -132,11 +133,21 @@ TMUX_FZF_OPTIONS="-d 35%"
 
 To list all available `fzf-tmux` options, execute `fzf-tmux --help` in your shell.
 
+## preview
+
+Preview is enabled by default, to hide it, add something like this to your `~/.tmux.conf`:
+
+```tmux
+TMUX_FZF_PREVIEW=0
+```
+
+Then the preview window will be hidden until `toggle-preview` is triggered.
+
 ## popup window
 
 To adjust the width and height of popup window, add something like this to your `~/.tmux.conf`:
 
-```shell
+```tmux
 TMUX_FZF_POPUP_HEIGHT="38%"
 TMUX_FZF_POPUP_WIDTH="62%"
 ```
@@ -145,7 +156,7 @@ TMUX_FZF_POPUP_WIDTH="62%"
 
 To customize the order of the items, add something like this to your `~/.tmux.conf`:
 
-```shell
+```tmux
 TMUX_FZF_ORDER="session|window|pane|command|keybinding"
 ```
 

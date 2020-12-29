@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TMUX_FZF_PREVIEW="${TMUX_FZF_PREVIEW:-1}"
 
 current_pane_origin=$(tmux display-message -p '#S:#{window_index}.#{pane_index}: #{window_name}')
 current_pane=$(tmux display-message -p '#S:#{window_index}.#{pane_index}')
@@ -16,6 +17,12 @@ if [[ -z "$1" ]]; then
     action=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\nresize\nrename\n[cancel]" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
 else
     action="$1"
+fi
+
+if [ "$TMUX_FZF_PREVIEW" == 1 ]; then
+    preview_options="--preview='$CURRENT_DIR/.preview {}' --preview-window=:follow"
+else
+    preview_options="--preview='$CURRENT_DIR/.preview {}' --preview-window=:follow:hidden"
 fi
 
 [[ "$action" == "[cancel]" || -z "$action" ]] && exit
@@ -55,9 +62,9 @@ else
     fi
     if [[ "$action" == "switch" || "$action" == "join" ]]; then
         panes=$(echo "$panes" | grep -v "^$current_pane")
-        target_origin=$(printf "%s\n[cancel]" "$panes" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        target_origin=$(printf "%s\n[cancel]" "$panes" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS $preview_options")
     else
-        target_origin=$(printf "[current]\n%s\n[cancel]" "$panes" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        target_origin=$(printf "[current]\n%s\n[cancel]" "$panes" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS $preview_options")
         target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_pane_origin/")
     fi
     [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
@@ -71,7 +78,7 @@ else
     elif [[ "$action" == "swap" ]]; then
         panes=$(echo "$panes" | grep -v "^$target")
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select another target pane."')
-        target_swap_origin=$(printf "%s\n[cancel]" "$panes" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        target_swap_origin=$(printf "%s\n[cancel]" "$panes" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS $preview_options")
         [[ "$target_swap_origin" == "[cancel]" || -z "$target_swap_origin" ]] && exit
         target_swap=$(echo "$target_swap_origin" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*\.[[:digit:]]*:' | sed 's/.$//g')
         tmux swap-pane -s "$target" -t "$target_swap"

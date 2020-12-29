@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TMUX_FZF_PREVIEW="${TMUX_FZF_PREVIEW:-1}"
 
 current_window_origin=$(tmux display-message -p '#S:#I: #{window_name}')
 current_window=$(tmux display-message -p '#S:#I')
@@ -18,6 +19,12 @@ else
     action="$1"
 fi
 
+if [ "$TMUX_FZF_PREVIEW" == 1 ]; then
+    preview_options="--preview='$CURRENT_DIR/.preview {}' --preview-window=:follow"
+else
+    preview_options="--preview='$CURRENT_DIR/.preview {}' --preview-window=:follow:hidden"
+fi
+
 [[ "$action" == "[cancel]" || -z "$action" ]] && exit
 if [[ "$action" == "link" ]]; then
     cur_win=$(tmux display-message -p | sed -e 's/^.//' -e 's/] /:/' | grep -o '[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | sed 's/.$//g')
@@ -25,7 +32,7 @@ if [[ "$action" == "link" ]]; then
     last_win_num=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
     windows=$(echo "$windows" | grep -v "^$cur_ses")
     FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select source window."')
-    src_win_origin=$(printf "%s\n[cancel]" "$windows" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+    src_win_origin=$(printf "%s\n[cancel]" "$windows" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS $preview_options")
     [[ "$src_win_origin" == "[cancel]" || -z "$src_win_origin" ]] && exit
     src_win=$(echo "$src_win_origin" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | sed 's/.$//g')
     tmux link-window -a -s "$src_win" -t "$cur_win"
@@ -35,7 +42,7 @@ elif [[ "$action" == "move" ]]; then
     last_win_num=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
     windows=$(echo "$windows" | grep -v "^$cur_ses")
     FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select source window."')
-    src_win_origin=$(printf "%s\n[cancel]" "$windows" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+    src_win_origin=$(printf "%s\n[cancel]" "$windows" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS $preview_options")
     [[ "$src_win_origin" == "[cancel]" || -z "$src_win_origin" ]] && exit
     src_win=$(echo "$src_win_origin" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | sed 's/.$//g')
     tmux move-window -a -s "$src_win" -t "$cur_win"
@@ -46,11 +53,11 @@ else
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select target window."')
     fi
     if [[ "$action" != "switch" ]]; then
-        target_origin=$(printf "[current]\n%s\n[cancel]" "$windows" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        target_origin=$(printf "[current]\n%s\n[cancel]" "$windows" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS $preview_options")
         target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_window_origin/")
     else
         windows=$(echo "$windows" | grep -v "^$current_window")
-        target_origin=$(printf "%s\n[cancel]" "$windows" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        target_origin=$(printf "%s\n[cancel]" "$windows" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS $preview_options")
     fi
     [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
     target=$(echo "$target_origin" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | sed 's/.$//g')
@@ -61,7 +68,7 @@ else
     elif [[ "$action" == "swap" ]]; then
         windows=$(echo "$windows" | grep -v "^$target")
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select another target window."')
-        target_swap_origin=$(printf "%s\n[cancel]" "$windows" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS")
+        target_swap_origin=$(printf "%s\n[cancel]" "$windows" | eval "$CURRENT_DIR/.fzf-tmux $TMUX_FZF_OPTIONS $preview_options")
         [[ "$target_swap_origin" == "[cancel]" || -z "$target_swap_origin" ]] && exit
         target_swap=$(echo "$target_swap_origin" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*:' | sed 's/.$//g')
         tmux swap-pane -s "$target" -t "$target_swap"
