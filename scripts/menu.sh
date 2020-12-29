@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$CURRENT_DIR/../settings.sh"
 
 # get front end list
 tmux_fzf_menu_origin=$TMUX_FZF_MENU

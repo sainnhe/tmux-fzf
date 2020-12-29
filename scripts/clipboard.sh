@@ -2,6 +2,7 @@
 
 FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select clipboard history"')
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$CURRENT_DIR/../settings.sh"
 
 if ! [ -x "$(command -v copyq)" ]; then
     action="buffer"

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "$CURRENT_DIR/../settings.sh"
 
 current_session=$(tmux list-sessions | grep 'attached')
 if [[ -z "$TMUX_FZF_SESSION_FORMAT" ]]; then

@@ -19,7 +19,7 @@
 - [GNU bash](https://www.gnu.org/software/bash/)
 - [GNU sed](https://www.gnu.org/software/sed/)
 - [junegunn/fzf](https://github.com/junegunn/fzf/)
-- [CopyQ](https://github.com/hluk/CopyQ) (optional for accessing system clipboard)
+- [CopyQ](https://github.com/hluk/CopyQ) (optional for accessing system clipboard, otherwise use tmux buffers instead)
 
 **Note:** Please use this command to check whether tmux is able to find fzf [#1](https://github.com/sainnhe/tmux-fzf/issues/1): `tmux run-shell -b 'command -v fzf'`
 
@@ -76,8 +76,7 @@ You can add a custom menu to quickly execute some commands.
 This feature is not enabled by default. To enable it, add something like this to `~/.tmux.conf`
 
 ```shell
-TMUX_FZF_MENU=\
-"foo\necho 'Hello!'\n"\
+set -g @tmux-fzf-menu "foo\necho 'Hello!'\n"\
 "bar\nls ~\n"\
 "sh\nsh ~/test.sh\n"
 ```
@@ -94,7 +93,7 @@ When you select `sh`, tmux will execute `sh ~/test.sh`.
 
 **Note:**
 
-- `foo` and `echo 'hello'` are separated by `\n` in `TMUX_FZF_MENU`, and you need to add another `\n` after `echo 'hello'`.
+- `foo` and `echo 'hello'` are separated by `\n` in `@tmux-fzf-menu`, and you need to add another `\n` after `echo 'hello'`.
 - **DO NOT** add additional white spaces/tabs at the beginning of each line.
 - Commands are executed using `tmux -c`, so please make sure `tmux -c "your command"` makes sense.
 
@@ -104,9 +103,9 @@ To enable popup window, you'll need to compile and install the latest developmen
 
 For arch linux users, there is a package available in AUR: [tmux-git](https://aur.archlinux.org/packages/tmux-git)
 
-This feature is automatically enabled in the version >= 3.2, but you can disable it by adding `TMUX_FZF_POPUP=0` to your `~/.tmux.conf`.
+This feature is automatically enabled in the version >= 3.2, but you can disable it by adding `set -g @tmux-fzf-popup 0` to your `~/.tmux.conf`.
 
-If your tmux version < 3.2 but you're pretty sure that your tmux supports popup window, you can force enabling it by adding `TMUX_FZF_POPUP=1` to your `~/.tmux.conf`
+If your tmux version < 3.2 but you're pretty sure that your tmux supports popup window, you can force enabling it by adding `set -g @tmux-fzf-popup 1` to your `~/.tmux.conf`
 
 # Customization
 
@@ -127,7 +126,7 @@ For more information, check [official page of fzf](https://github.com/junegunn/f
 In addition, this plugin supports options of `fzf-tmux` command which is [provided by fzf](https://github.com/junegunn/fzf#fzf-tmux-script), you can customize them by adding something like this to `~/.tmux.conf`
 
 ```tmux
-TMUX_FZF_OPTIONS="-d 35%"
+set -g @tmux-fzf-options "-d 35%"
 ```
 
 To list all available `fzf-tmux` options, execute `fzf-tmux --help` in your shell.
@@ -136,32 +135,32 @@ To list all available `fzf-tmux` options, execute `fzf-tmux --help` in your shel
 
 To adjust the width and height of popup window, add something like this to your `~/.tmux.conf`:
 
-```shell
-TMUX_FZF_POPUP_HEIGHT="38%"
-TMUX_FZF_POPUP_WIDTH="62%"
+```tmux
+set -g @tmux-fzf-popup-height "38%"
+set -g @tmux-fzf-popup-width "62%"
 ```
 
 ## order
 
 To customize the order of the items, add something like this to your `~/.tmux.conf`:
 
-```shell
-TMUX_FZF_ORDER="session|window|pane|command|keybinding"
+```tmux
+set -g @tmux-fzf-order "session|window|pane|command|keybinding|clipboard"
 ```
 
 ## format
 
 For some reasons, you may want to customize format of panes, windows, sessions listed in fzf. There are three variables to complete this work:
 
-`TMUX_FZF_PANE_FORMAT`   `TMUX_FZF_WINDOW_FORMAT`   `TMUX_FZF_SESSION_FORMAT`
+`@tmux-fzf-pane-format`  `@tmux-fzf-window-format`  `tmux-fzf-session-format`
 
 For example, `tmux list-panes -a` doesn't show running program and window name by default. If you want to show running program and window name, add something like this to `~/.tmux.conf`
 
 ```tmux
-TMUX_FZF_PANE_FORMAT="[#{window_name}] #{pane_current_command}  [#{pane_width}x#{pane_height}] [history #{history_size}/#{history_limit}, #{history_bytes} bytes] #{?pane_active,[active],[inactive]}"
+set -g @tmux-fzf-pane-format "[#{window_name}] #{pane_current_command}  [#{pane_width}x#{pane_height}] [history #{history_size}/#{history_limit}, #{history_bytes} bytes] #{?pane_active,[active],[inactive]}"
 ```
 
-Similarly, `TMUX_FZF_WINDOW_FORMAT` and `TMUX_FZF_SESSION_FORMAT` can also be handled in this way.
+Similarly, `@tmux-fzf-window-format` and `@tmux-fzf-session-format` can also be handled in this way.
 
 For more information, check "FORMATS" section in tmux manual.
 

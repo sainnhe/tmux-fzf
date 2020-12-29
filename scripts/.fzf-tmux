@@ -7,15 +7,8 @@ fail() {
   exit 2
 }
 
-TMUX_VERSION=$(tmux -V | grep -oE '[0-9]+\.[0-9]*')
-version='3.1'
-if [ ${TMUX_VERSION%.*} -eq ${version%.*} ] && [ ${TMUX_VERSION#*.} \> ${version#*.} ] || [ ${TMUX_VERSION%.*} -gt ${version%.*} ]; then
-  TMUX_FZF_POPUP="${TMUX_FZF_POPUP:-1}"
-else
-  TMUX_FZF_POPUP="${TMUX_FZF_POPUP:-0}"
-fi
-TMUX_FZF_POPUP_HEIGHT=${TMUX_FZF_POPUP_HEIGHT:-38%}
-TMUX_FZF_POPUP_WIDTH=${TMUX_FZF_POPUP_WIDTH:-62%}
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "$CURRENT_DIR/../settings.sh"
 
 fzf="$(command -v fzf 2> /dev/null)" || fzf="$(dirname "$0")/fzf"
 [[ -x "$fzf" ]] || fail 'fzf executable not found'
