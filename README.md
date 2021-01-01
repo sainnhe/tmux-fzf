@@ -181,6 +181,6 @@ For more information, check "FORMATS" section in tmux manual.
 
 # License
 
-For the code in [/fzf](./fzf) directory, see [junegunn/fzf](https://github.com/junegunn/fzf#license).
+The code of [/scripts/.fzf-tmux](./scripts/.fzf-tmux) is copied from [junegunn/fzf](https://github.com/junegunn/fzf#license) which is licensed under [MIT](https://github.com/junegunn/fzf/blob/master/LICENSE).
 
 Other code is distributed under [MIT](./LICENSE) && [Anti-996](./Anti-996-LICENSE).
