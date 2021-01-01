@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# $TMUX_FZF_PREVIEW_OPTIONS
+TMUX_FZF_PREVIEW="${TMUX_FZF_PREVIEW:-1}"
+if [ "$TMUX_FZF_PREVIEW" == 1 ]; then
+  TMUX_FZF_PREVIEW_OPTIONS="--preview='$current_dir/.preview {}' --preview-window=:follow"
+else
+  TMUX_FZF_PREVIEW_OPTIONS="--preview='$current_dir/.preview {}' --preview-window=:follow:hidden"
+fi
+
+# $TMUX_FZF_BIN
+TMUX_FZF_BIN="bash $current_dir/../fzf/bin/fzf-tmux"
+
+# $TMUX_FZF_OPTIONS
+tmux_version=$(tmux -V | grep -oE '[0-9]+\.[0-9]*')
+version='3.1'
+if  [ ${tmux_version%.*} -eq ${version%.*} ] && [ ${tmux_version#*.} \> ${version#*.} ] || [ ${tmux_version%.*} -gt ${version%.*} ]; then
+  [ -z "$TMUX_FZF_OPTIONS" ] && TMUX_FZF_OPTIONS="-p -w 62% -h 38%"
+fi
+
+# Unset temporary variables.
+unset \
+  current_dir \
+  tmux_version \
+  version

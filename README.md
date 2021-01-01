@@ -11,7 +11,6 @@
 - Search key bindings and execute.
 - Search clipboard history and paste to current window.
 - User menu.
-- [Popup window](https://github.com/tmux/tmux/issues/1842) support.
 
 # Installation
 
@@ -101,13 +100,11 @@ When you select `sh`, tmux will execute `sh ~/test.sh`.
 
 ## popup window
 
-To enable popup window, you'll need to compile and install the latest development version from [tmux/tmux](https://github.com/tmux/tmux).
+Popup window is a new feature introduced in tmux 3.2 (hasn't been released yet). To enable it, you'll need to compile and install the latest development version of [tmux/tmux](https://github.com/tmux/tmux).
 
 For arch linux users, there is a package available in AUR: [tmux-git](https://aur.archlinux.org/packages/tmux-git)
 
-This feature is automatically enabled in the version >= 3.2, but you can disable it by adding `TMUX_FZF_POPUP=0` to your `~/.tmux.conf`.
-
-If your tmux version < 3.2 but you're pretty sure that your tmux supports popup window, you can force enabling it by adding `TMUX_FZF_POPUP=1` to your `~/.tmux.conf`
+This feature is automatically enabled in the version >= 3.2, but you can disable it using `$TMUX_FZF_OPTIONS`, see [fzf behavior](https://github.com/sainnhe/tmux-fzf#fzf-behavior).
 
 # Customization
 
@@ -128,7 +125,11 @@ For more information, check [official page of fzf](https://github.com/junegunn/f
 In addition, this plugin supports options of `fzf-tmux` command which is [provided by fzf](https://github.com/junegunn/fzf#fzf-tmux-script), you can customize them by adding something like this to `~/.tmux.conf`
 
 ```tmux
-TMUX_FZF_OPTIONS="-d 35%"
+# Default value in version < 3.2
+TMUX_FZF_OPTIONS=""
+
+# Default value in version >= 3.2
+TMUX_FZF_OPTIONS="-p -w 62% -h 38%"
 ```
 
 To list all available `fzf-tmux` options, execute `fzf-tmux --help` in your shell.
@@ -142,15 +143,6 @@ TMUX_FZF_PREVIEW=0
 ```
 
 Then the preview window will be hidden until `toggle-preview` is triggered.
-
-## popup window
-
-To adjust the width and height of popup window, add something like this to your `~/.tmux.conf`:
-
-```tmux
-TMUX_FZF_POPUP_HEIGHT="38%"
-TMUX_FZF_POPUP_WIDTH="62%"
-```
 
 ## order
 
@@ -188,5 +180,7 @@ For more information, check "FORMATS" section in tmux manual.
 - [sainnhe/tmux-translator](https://github.com/sainnhe/tmux-translator): A translation plugin powered by popup window.
 
 # License
+
+For the code in [/fzf](./fzf) directory, see [junegunn/fzf](https://github.com/junegunn/fzf#license).
 
 Other code is distributed under [MIT](./LICENSE) && [Anti-996](./Anti-996-LICENSE).
