@@ -62,7 +62,7 @@ else
         target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_pane_origin/")
     fi
     [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
-    target=$(echo "$target_origin" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*\.[[:digit:]]*:' | sed 's/.$//g')
+    target=$(echo "$target_origin" | sed 's/: .*//')
     if [[ "$action" == "switch" ]]; then
         echo "$target" | sed -E 's/:.*//g' | xargs tmux switch-client -t
         echo "$target" | sed -E 's/\..*//g' | xargs tmux select-window -t
@@ -74,7 +74,7 @@ else
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select another target pane."')
         target_swap_origin=$(printf "%s\n[cancel]" "$panes" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
         [[ "$target_swap_origin" == "[cancel]" || -z "$target_swap_origin" ]] && exit
-        target_swap=$(echo "$target_swap_origin" | grep -o '^[[:alpha:]|[:digit:]]*:[[:digit:]]*\.[[:digit:]]*:' | sed 's/.$//g')
+        target_swap=$(echo "$target_swap_origin" | sed 's/: .*//')
         tmux swap-pane -s "$target" -t "$target_swap"
     elif [[ "$action" == "join" ]]; then
         echo "$target" | sort -r | xargs -i tmux move-pane -s {}
