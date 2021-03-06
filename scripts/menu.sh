@@ -17,4 +17,4 @@ target=$(printf "%s\n[cancel]" "$front_end_list" | eval "$TMUX_FZF_BIN $TMUX_FZF
 
 [[ "$target" == "[cancel]" || -z "$target" ]] && exit
 # get the next line in $TMUX_FZF_MENU and execute
-echo -e "$TMUX_FZF_MENU" | sed -n "/$target/{n;p;}" | xargs tmux -c
+echo -e "$TMUX_FZF_MENU" | sed -n "/$target/{n;p;}" | xargs -I{} tmux -c {}

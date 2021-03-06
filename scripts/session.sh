@@ -44,9 +44,9 @@ target=$(echo "$target_origin" | grep -o '^[[:alpha:][:digit:]_-]*:' | sed 's/.$
 if [[ "$action" == "attach" ]]; then
     echo "$target" | xargs tmux switch-client -t
 elif [[ "$action" == "detach" ]]; then
-    echo "$target" | xargs tmux detach -s
+    echo "$target" | xargs -i tmux detach -s {}
 elif [[ "$action" == "kill" ]]; then
-    echo "$target" | sort -r | xargs tmux kill-session -t
+    echo "$target" | sort -r | xargs -i tmux kill-session -t {}
 elif [[ "$action" == "rename" ]]; then
     tmux command-prompt -I "rename-session -t $target "
 fi

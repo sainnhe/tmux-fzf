@@ -68,7 +68,7 @@ else
         echo "$target" | sed -E 's/\..*//g' | xargs tmux select-window -t
         echo "$target" | xargs tmux select-pane -t
     elif [[ "$action" == "kill" ]]; then
-        echo "$target" | sort -r | xargs tmux kill-pane -t
+        echo "$target" | sort -r | xargs -i tmux kill-pane -t {}
     elif [[ "$action" == "swap" ]]; then
         panes=$(echo "$panes" | grep -v "^$target")
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select another target pane."')
@@ -77,7 +77,7 @@ else
         target_swap=$(echo "$target_swap_origin" | sed 's/: .*//')
         tmux swap-pane -s "$target" -t "$target_swap"
     elif [[ "$action" == "join" ]]; then
-        echo "$target" | sort -r | xargs tmux move-pane -s
+        echo "$target" | sort -r | xargs -i tmux move-pane -s {}
     elif [[ "$action" == "break" ]]; then
         cur_ses=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')
         last_win_num=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
