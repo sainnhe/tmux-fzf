@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-[[ -z "$TMUX_FZF_ORDER" ]] && TMUX_FZF_ORDER="session|window|pane|command|keybinding|clipboard"
+[[ -z "$TMUX_FZF_ORDER" ]] && TMUX_FZF_ORDER="session|window|pane|command|keybinding|clipboard|process"
 source "$CURRENT_DIR/scripts/.envs"
 
 items_origin="$(echo $TMUX_FZF_ORDER | tr '|' '\n')"
