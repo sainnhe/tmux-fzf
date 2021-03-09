@@ -21,7 +21,6 @@ fi
 
 [[ "$action" == "[cancel]" || -z "$action" ]] && exit
 if [[ "$action" == "link" ]]; then
-    cur_win=$(tmux display-message -p | sed -e 's/^.//' -e 's/] /:/' -e 's/,.*$//' -e '$s/:\w*$//')
     cur_ses=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')
     last_win_num=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
     windows=$(echo "$windows" | grep -v "^$cur_ses")
@@ -29,9 +28,8 @@ if [[ "$action" == "link" ]]; then
     src_win_origin=$(printf "%s\n[cancel]" "$windows" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
     [[ "$src_win_origin" == "[cancel]" || -z "$src_win_origin" ]] && exit
     src_win=$(echo "$src_win_origin" | sed 's/: .*//')
-    tmux link-window -a -s "$src_win" -t "$cur_win"
+    tmux link-window -a -s "$src_win" -t "$cur_ses"
 elif [[ "$action" == "move" ]]; then
-    cur_win=$(tmux display-message -p | sed -e 's/^.//' -e 's/] /:/' -e 's/,.*$//' -e '$s/:\w*$//')
     cur_ses=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')
     last_win_num=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
     windows=$(echo "$windows" | grep -v "^$cur_ses")
@@ -39,7 +37,7 @@ elif [[ "$action" == "move" ]]; then
     src_win_origin=$(printf "%s\n[cancel]" "$windows" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
     [[ "$src_win_origin" == "[cancel]" || -z "$src_win_origin" ]] && exit
     src_win=$(echo "$src_win_origin" | sed 's/: .*//')
-    tmux move-window -a -s "$src_win" -t "$cur_win"
+    tmux move-window -a -s "$src_win" -t "$cur_ses"
 else
     if [[ "$action" == "kill" ]]; then
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select target window(s). Press TAB to mark multiple items."')
