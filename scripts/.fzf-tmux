@@ -135,8 +135,8 @@ if [[ -z "$TMUX" ]]; then
   exit $?
 fi
 
-# --height option is not allowed
-args=("${args[@]}" "--no-height")
+# --height option is not allowed. CTRL-Z is also disabled.
+args=("${args[@]}" "--no-height" "--bind=ctrl-z:ignore")
 
 # Handle zoomed tmux pane without popup options by moving it to a temp window
 if [[ ! "$opt" =~ "-K -E" ]] && tmux list-panes -F '#F' | grep -q Z; then
@@ -204,7 +204,16 @@ if [[ "$opt" =~ "-K -E" ]]; then
     cat <<< "\"$fzf\" $opts < $fifo1 > $fifo2; out=\$? $close; exit \$out" >> $argsf
     cat <&0 > $fifo1 &
   fi
-  tmux popup -d "$PWD" "${tmux_args[@]}" $opt -R "bash $argsf" > /dev/null 2>&1
+
+  # tmux dropped the support for `-K`, `-R` to popup command
+  #   TODO: We can remove this once tmux 3.2 is released
+  if [[ ! "$(tmux popup --help 2>&1)" =~ '-R shell-command' ]]; then
+    opt="${opt/-K/}"
+  else
+    opt="${opt} -R"
+  fi
+
+  tmux popup -d "$PWD" "${tmux_args[@]}" $opt "bash $argsf" > /dev/null 2>&1
   exit $?
 fi
 
