@@ -80,7 +80,7 @@ else
         echo "$target" | sort -r | xargs -I{} tmux move-pane -s {}
     elif [[ "$action" == "break" ]]; then
         cur_ses=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')
-        last_win_num=$(tmux list-windows | sort -r | sed '2,$d' | sed 's/:.*//')
+        last_win_num=$(tmux list-windows | sort -nr | head -1 | sed 's/:.*//')
         ((last_win_num_after = last_win_num + 1))
         tmux break-pane -s "$target" -t "$cur_ses":"$last_win_num_after"
     elif [[ "$action" == "rename" ]]; then
