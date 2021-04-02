@@ -20,7 +20,8 @@
 - [GNU bash](https://www.gnu.org/software/bash/)
 - [GNU sed](https://www.gnu.org/software/sed/)
 - [junegunn/fzf](https://github.com/junegunn/fzf/)
-- [CopyQ](https://github.com/hluk/CopyQ) (optional for accessing system clipboard, fallback to builtin tmux buffers if copyq is not executable)
+- [CopyQ](https://github.com/hluk/CopyQ) (optional): Access system clipboard, fallback to builtin tmux buffers if copyq is not executable.
+- [pstree](https://gitlab.com/psmisc/psmisc) (optional): Display process tree.
 
 **Note:** Please use this command to check whether tmux is able to find fzf [#1](https://github.com/sainnhe/tmux-fzf/issues/1): `tmux run-shell -b 'command -v fzf'`
 

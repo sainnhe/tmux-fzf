@@ -5,7 +5,11 @@ source "$CURRENT_DIR/.envs"
 
 FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select an action."')
 if [[ -z "$1" ]]; then
-    action=$(printf "display\ntree\nterminate\nkill\ninterrupt\ncontinue\nstop\nquit\nhangup\n[cancel]" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
+    if [ -x "$(command -v pstree)" ]; then
+        action=$(printf "display\ntree\nterminate\nkill\ninterrupt\ncontinue\nstop\nquit\nhangup\n[cancel]" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
+    else
+        action=$(printf "display\nterminate\nkill\ninterrupt\ncontinue\nstop\nquit\nhangup\n[cancel]" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
+    fi
 else
     action="$1"
 fi
