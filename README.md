@@ -2,26 +2,26 @@
 
 # Features
 
-- Manage sessions (attach, detach*, rename, kill*).
-- Manage windows (switch, link, move, swap, rename, kill*).
-- Manage panes (switch, break, join*, swap, layout, kill*, resize).
-- Preview sessions, windows and panes.
-- Multiple selection (support for actions marked by *).
+- Manage sessions (attach, detach, rename, kill).
+- Manage windows (switch, link, move, swap, rename, kill).
+- Manage panes (switch, break, join, swap, layout, kill, resize, rename).
 - Search commands and append to command prompt.
 - Search key bindings and execute.
 - Search clipboard history and paste to current window.
-- Process management.
-- User menu.
+- Process management (top, pstree, terminate, kill, interrupt, continue, stop, quit, hangup).
+- User menu (run custom commands).
+- Preview sessions, windows and panes.
+- Multiple selection.
 
 # Installation
 
 ## Requirements
 
 - [GNU bash](https://www.gnu.org/software/bash/)
-- [GNU sed](https://www.gnu.org/software/sed/)
+- [sed](https://www.gnu.org/software/sed/)
 - [junegunn/fzf](https://github.com/junegunn/fzf/)
-- [CopyQ](https://github.com/hluk/CopyQ) (optional): Access system clipboard, fallback to builtin tmux buffers if copyq is not executable.
-- [pstree](https://gitlab.com/psmisc/psmisc) (optional): Display process tree.
+- [CopyQ](https://github.com/hluk/CopyQ/) (optional): Access system clipboard, fallback to builtin tmux buffers if copyq is not executable.
+- [pstree](https://gitlab.com/psmisc/psmisc/) (optional): Display process tree.
 
 **Note:** Please use this command to check whether tmux is able to find fzf [#1](https://github.com/sainnhe/tmux-fzf/issues/1): `tmux run-shell -b 'command -v fzf'`
 
@@ -41,37 +41,19 @@ To launch tmux-fzf, press `prefix` + `F` (Shift+F).
 
 This plugin supports multiple selection for some actions, you can press `TAB` and `Shift-TAB` to mark multiple items.
 
-You can bind a key to preselect an action. See [#6](https://github.com/sainnhe/tmux-fzf/issues/6) for more information.
+Most of the features work out of the box, but there are some features that need to be explained here.
 
-Most actions don't need to be explained, but there are some actions that might need to be explained here.
+## Kill Window(s)
 
-## link & move window
+The `kill` action in tmux-fzf actually uses `tmux unlink-window -k` instead of `tmux kill-window`.
 
-You can use **link** action to link a window from another session to current session.
+The main difference between `unlink-window -k` and `kill-window` is that `kill-window` will kill current window and all other windows linked to it, while `unlink-window -k` will only kill current window.
 
-launch tmux-fzf -> `window` -> `link` -> select a window in another session
-
-And you can use **kill** action to unlink or kill current window.
-
-`kill` actually use `tmux unlink-window -k` instead of `tmux kill-window`. The main difference between `unlink-window -k` and `kill-window` is that `kill-window` will kill current window and all other windows linked to it, while `unlink-window -k` will only kill current window.
-
-The logic of the `unlink -k` action is a bit like hard link in unix/linux. If the current window only exists in one session, then kill; if the current window exists in multiple sessions, then unlink.
+The logic of `unlink -k` is a bit like hard links. If the current window only exists in one session, then kill; if the current window exists in multiple sessions, then unlink.
 
 Btw, if you want to bind a key to kill current window, I would recommend `unlink-window -k` instead of `kill`.
 
-**move** action is similar to link, except the window at source window is moved to destination.
-
-## break & join pane
-
-**break** action will break source pane off from its containing window to make it the only pane in destination window.
-
-launch tmux-fzf -> `pane` -> `break` -> select source pane
-
-**join** action is like split-window, but instead of splitting destination pane and creating a new pane, it will split it and move source pane to the current window. This can be used to reverse break-pane.
-
-launch tmux-fzf -> `pane` -> `join` -> select source pane(s)
-
-## user menu
+## User Menu
 
 You can add a custom menu to quickly execute some commands.
 
@@ -98,19 +80,17 @@ When you select `sh`, tmux will execute `sh ~/test.sh`.
 
 - `foo` and `echo 'hello'` are separated by `\n` in `TMUX_FZF_MENU`, and you need to add another `\n` after `echo 'hello'`.
 - **DO NOT** add additional white spaces/tabs at the beginning of each line.
-- Commands are executed using `tmux -c`, so please make sure `tmux -c "your command"` makes sense.
+- Commands are executed using `tmux -c`, so please make sure `tmux -c "your command"` does work.
 
-## popup window
+## Popup Window
 
-Popup window is a new feature introduced in tmux 3.2 (hasn't been released yet). To enable it, you'll need to compile and install the latest development version of [tmux/tmux](https://github.com/tmux/tmux).
+Popup window is a new feature introduced in tmux 3.2 . To enable this feature, you'll need to have tmux >= 3.2 installed.
 
-For arch linux users, there is a package available in AUR: [tmux-git](https://aur.archlinux.org/packages/tmux-git)
-
-This feature is automatically enabled in the version >= 3.2, but you can disable it using `$TMUX_FZF_OPTIONS`, see [fzf behavior](https://github.com/sainnhe/tmux-fzf#fzf-behavior).
+This feature is automatically enabled in tmux >= 3.2, but you can disable it using `$TMUX_FZF_OPTIONS`, see [Fzf Behavior](#fzf-behavior).
 
 # Customization
 
-## key binding
+## Key Binding
 
 For example, to use `prefix` + `C-f` (Ctrl+F), add this line to your `~/.tmux.conf`
 
@@ -118,27 +98,25 @@ For example, to use `prefix` + `C-f` (Ctrl+F), add this line to your `~/.tmux.co
 TMUX_FZF_LAUNCH_KEY="C-f"
 ```
 
-## fzf behavior
+## Fzf Behavior
 
-This plugin will read fzf environment variables, so you can customize the behavior of fzf such as prompt and color by setting those variables.
+This plugin will read [fzf environment variables](https://github.com/junegunn/fzf/#environment-variables), so you can use these variables to customize the behavior of fzf (e.g. prompt and color).
 
-For more information, check [official page of fzf](https://github.com/junegunn/fzf/#environment-variables).
-
-In addition, this plugin supports options of `fzf-tmux` command which is [provided by fzf](https://github.com/junegunn/fzf#fzf-tmux-script), you can customize them by adding something like this to `~/.tmux.conf`
+In addition, this plugin supports customizing the options of `fzf-tmux` command which is [bundled with fzf](https://github.com/junegunn/fzf#fzf-tmux-script), you can customize them by adding something like this to `~/.tmux.conf`
 
 ```tmux
-# Default value in version < 3.2
+# Default value in tmux < 3.2
 TMUX_FZF_OPTIONS=""
 
-# Default value in version >= 3.2
+# Default value in tmux >= 3.2
 TMUX_FZF_OPTIONS="-p -w 62% -h 38%"
 ```
 
-To list all available `fzf-tmux` options, execute `fzf-tmux --help` in your shell.
+To list all available options of `fzf-tmux`, execute `~/.tmux/plugins/tmux-fzf/scripts/.fzf-tmux --help` in your shell.
 
-## preview
+## Preview
 
-Preview is enabled by default, to hide it, add something like this to your `~/.tmux.conf`:
+Preview is enabled by default. To hide it, add something like this to your `~/.tmux.conf`:
 
 ```tmux
 TMUX_FZF_PREVIEW=0
@@ -146,15 +124,21 @@ TMUX_FZF_PREVIEW=0
 
 Then the preview window will be hidden until `toggle-preview` is triggered.
 
-## order
+## Order
 
-To customize the order of the items, add something like this to your `~/.tmux.conf`:
+To customize the order of the actions, add something like this to your `~/.tmux.conf`:
+
+```tmux
+TMUX_FZF_ORDER="session|window|pane|command|keybinding|clipboard|process"
+```
+
+You can also use this variable to disable unwanted features. For example, to disable `clipboard` and `process`, simply delete them in `$TMUX_FZF_ORDER`:
 
 ```tmux
 TMUX_FZF_ORDER="session|window|pane|command|keybinding"
 ```
 
-## format
+## Format
 
 For some reasons, you may want to customize format of panes, windows, sessions listed in fzf. There are three variables to complete this work:
 
@@ -172,10 +156,21 @@ For more information, check "FORMATS" section in tmux manual.
 
 # FAQ
 
-- **Q:** What's your status line configuration?
-- **A:** See this [article](https://www.sainnhe.dev/post/status-line-config/).
-- **Q:** What's the color scheme used in the screenshot?
-- **A:** [Gruvbox Material](https://github.com/gruvbox-material/gruvbox-material)
+**Q: Why use environment variables instead of tmux options to customize this plugin?**
+
+**A:** Because the performance of tmux options is very bad. I pushed a branch named `tmux-options` to demonstrate how bad the performance will be if we use tmux options to customize this plugin, you can checkout this branch and get it a try.
+
+**Q: How to launch tmux-fzf with preselected action?**
+
+**A:** See [#6](https://github.com/sainnhe/tmux-fzf/issues/6).
+
+**Q: What's your status line configuration?**
+
+**A:** See this [post](https://www.sainnhe.dev/post/status-line-config/).
+
+**Q: What's the color scheme used in the screenshot?**
+
+**A:** [Gruvbox Material](https://github.com/sainnhe/gruvbox-material)
 
 # More plugins
 
