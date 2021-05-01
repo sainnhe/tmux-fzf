@@ -3,11 +3,11 @@
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$CURRENT_DIR/.envs"
 
-current_session=$(tmux list-sessions | grep 'attached')
+current_session=$(tmux display-message -p | sed -e 's/^\[//' -e 's/\].*//')
 if [[ -z "$TMUX_FZF_SESSION_FORMAT" ]]; then
-    sessions=$(tmux list-sessions)
+    sessions=$(tmux list-sessions | grep -v "^$current_session: ")
 else
-    sessions=$(tmux list-sessions -F "#S: $TMUX_FZF_SESSION_FORMAT")
+    sessions=$(tmux list-sessions -F "#S: $TMUX_FZF_SESSION_FORMAT" | grep -v "^$current_session: ")
 fi
 
 FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select an action."')
@@ -25,19 +25,17 @@ if [[ "$action" != "detach" ]]; then
         FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select target session."')
     fi
     if [[ "$action" == "attach" ]]; then
-        tmux_attached_sessions=$(tmux list-sessions | grep 'attached' | grep -o '^[[:alpha:][:digit:]_-]*:' | sed 's/.$//g')
-        sessions=$(echo "$sessions" | grep -v "^$tmux_attached_sessions: ")
         target_origin=$(printf "%s\n[cancel]" "$sessions" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
     else
         target_origin=$(printf "[current]\n%s\n[cancel]" "$sessions" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
-        target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_session/")
+        target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_session:/")
     fi
 else
     tmux_attached_sessions=$(tmux list-sessions | grep 'attached' | grep -o '^[[:alpha:][:digit:]_-]*:' | sed 's/.$//g')
     sessions=$(echo "$sessions" | grep "^$tmux_attached_sessions")
     FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select target session(s). Press TAB to mark multiple items."')
     target_origin=$(printf "[current]\n%s\n[cancel]" "$sessions" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
-    target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_session/")
+    target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_session:/")
 fi
 [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
 target=$(echo "$target_origin" | grep -o '^[[:alpha:][:digit:]_-]*:' | sed 's/.$//g')
