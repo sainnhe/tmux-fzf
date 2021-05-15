@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select clipboard history"')
+FZF_DEFAULT_OPTS=$(echo $FZF_DEFAULT_OPTS | sed -E -e '$a --header="Select clipboard history. Press TAB to mark multiple items."')
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$CURRENT_DIR/.envs"
 
@@ -16,14 +16,14 @@ if [[ "$action" == "system" ]]; then
     item_numbers=$(copyq count)
     index=0
     while [ "$index" -lt "$item_numbers" ]; do
-        copyq_read="$copyq_read $index"
+        copyq_list="$copyq_list $index"
         index=$((index + 1))
     done
-    system_clipboard_history=$(eval "copyq read ${copyq_read}" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
-    [[ -z "${system_clipboard_history}" ]] && exit
-    tmux send-keys -l "${system_clipboard_history}"
+    copyq_index=$(echo "[cancel] $copyq_list" | sed -e 's/\] /]/' -e 's/ /\n/g' | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS --preview='copyq read {}'")
+    [[ "$copyq_index" == "[cancel]" || -z "$copyq_index" ]] && exit
+    echo "$copyq_index" | xargs -I{} sh -c 'tmux set-buffer -b _temp_tmux_fzf "$(copyq read {})" && tmux paste-buffer -b _temp_tmux_fzf && tmux delete-buffer -b _temp_tmux_fzf'
 elif [[ "$action" == "buffer" ]]; then
-    buffer_clipboard_history=$(tmux list-buffers | sed -E -e 's/^buffer[^/]*bytes: "//' -e 's/"$//' | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
-    [[ -z "${buffer_clipboard_history}" ]] && exit
-    tmux send-keys -l "${buffer_clipboard_history}"
+    selected_buffer=$(tmux list-buffers | sed 's/:.*$//' | sed '$a[cancel]' | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS --preview='tmux show-buffer -b {}'")
+    [[ "$selected_buffer" == "[cancel]" || -z "$selected_buffer" ]] && exit
+    echo "$selected_buffer" | xargs -I{} sh -c 'tmux paste-buffer -b {}'
 fi
