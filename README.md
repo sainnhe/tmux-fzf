@@ -106,10 +106,10 @@ In addition, this plugin supports customizing the options of `fzf-tmux` command 
 
 ```tmux
 # Default value in tmux < 3.2
-TMUX_FZF_OPTIONS=""
+TMUX_FZF_OPTIONS="-m"
 
 # Default value in tmux >= 3.2
-TMUX_FZF_OPTIONS="-p -w 62% -h 38%"
+TMUX_FZF_OPTIONS="-p -w 62% -h 38% -m"
 ```
 
 To list all available options of `fzf-tmux`, execute `~/.tmux/plugins/tmux-fzf/scripts/.fzf-tmux --help` in your shell.

@@ -32,7 +32,9 @@ TMUX_FZF_BIN="$current_dir/.fzf-tmux"
 # $TMUX_FZF_OPTIONS
 tmux_version=$(tmux -V | grep -oE '[0-9]+\.[0-9]*')
 if [ $(compare_float $tmux_version "3.1") == ">" ]; then
-  [ -z "$TMUX_FZF_OPTIONS" ] && TMUX_FZF_OPTIONS="-p -w 62% -h 38%"
+  [ -z "$TMUX_FZF_OPTIONS" ] && TMUX_FZF_OPTIONS="-p -w 62% -h 38% -m"
+else
+  [ -z "$TMUX_FZF_OPTIONS" ] && TMUX_FZF_OPTIONS="-m"
 fi
 
 # Unset temporary variables and functions.
