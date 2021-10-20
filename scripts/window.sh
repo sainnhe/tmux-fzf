@@ -4,7 +4,7 @@ CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$CURRENT_DIR/.envs"
 
 current_window_origin=$(tmux display-message -p '#S:#I: #{window_name}')
-current_window=$(tmux display-message -p '#S:#I')
+current_window=$(tmux display-message -p '#S:#I:')
 if [[ -z "$TMUX_FZF_WINDOW_FORMAT" ]]; then
     windows=$(tmux list-windows -a)
 else
