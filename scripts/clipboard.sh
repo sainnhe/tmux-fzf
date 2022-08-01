@@ -23,7 +23,8 @@ if [[ "$action" == "system" ]]; then
     [[ "$copyq_index" == "[cancel]" || -z "$copyq_index" ]] && exit
     echo "$copyq_index" | xargs -I{} sh -c 'tmux set-buffer -b _temp_tmux_fzf "$(copyq read {})" && tmux paste-buffer -b _temp_tmux_fzf && tmux delete-buffer -b _temp_tmux_fzf'
 elif [[ "$action" == "buffer" ]]; then
-    selected_buffer=$(tmux list-buffers | sed 's/:[^:]*:/:/' | sed '$a[cancel]' | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS --preview=\"echo {} | sed 's/:.*$//' | xargs tmux show-buffer -b \"")
+    sed_filter_buffer='s/:.*$//'
+    selected_buffer=$(tmux list-buffers | sed 's/:[^:]*:/:/' | sed '$a[cancel]' | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS --preview=\"echo {} | sed '$sed_filter_buffer' | xargs tmux show-buffer -b \"")
     [[ "$selected_buffer" == "[cancel]" || -z "$selected_buffer" ]] && exit
-    echo "$selected_buffer" | sed 's/:.*$//' | xargs -I{} sh -c 'tmux paste-buffer -b {}'
+    echo "$selected_buffer" | sed "$sed_filter_buffer" | xargs -I{} sh -c 'tmux paste-buffer -b {}'
 fi
