@@ -16,39 +16,45 @@ fi
 
 [[ "$action" == "[cancel]" || -z "$action" ]] && exit
 
-FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='    PID USER      NI STAT COMMAND                     %CPU %MEM    VSZ   RSS     TIME'"
-ps_list="$(ps -eo pid,user,nice,stat,command,%cpu,%mem,vsize,rssize,time | sed '1d')"
-ps_selected=$(printf "    [cancel]\n$ps_list" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
-[[ "$ps_selected" == "    [cancel]" || -z "$ps_selected" ]] && exit
-ps_id="$(echo $ps_selected | sed -e 's/^ *//' -e 's/ .*//')"
-ps_user="$(echo $ps_selected | sed -e 's/^ *[[:digit:]]* *//' -e 's/ .*//')"
+content_raw="$(ps aux)"
+header=$(echo "$content_raw" | head -n 1)
+content=$(echo "$content_raw" | sed 1d)
+FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='$header'"
+ps_selected=$(printf "[cancel]\n$content" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
+[[ "$ps_selected" == "[cancel]" || -z "$ps_selected" ]] && exit
+pid=$(echo "$ps_selected" | awk -F ' ' '{print $2}')
+user=$(echo "$ps_selected" | awk -F ' ' '{print $1}')
 _kill() { #{{{ _kill SIG PID USER
-    if [[ "$3" == "root" ]]; then
+    if [[ "$3" == "$(whoami)" ]]; then
+        kill -s $1 $2
+    else
         if [ -x "$(command -v sudo)" ]; then
             tmux split-window -v -p 30 -b -c '#{pane_current_path}' "bash -c 'sudo kill -s $1 $2'"
         elif [ -x "$(command -v doas)" ]; then
             tmux split-window -v -p 30 -b -c '#{pane_current_path}' "bash -c 'doas kill -s $1 $2'"
         fi
-    else
-        kill -s $1 $2
     fi
 } #}}}
 if [[ "$action" == "display" ]]; then
-    tmux split-window -v -p 50 -b -c '#{pane_current_path}' "top -p $ps_id"
+    if [[ "$(uname)" == "Linux" ]]; then
+        tmux split-window -v -p 50 -b -c '#{pane_current_path}' "top -p $pid"
+    else
+        tmux split-window -v -p 50 -b -c '#{pane_current_path}' "top -pid $pid"
+    fi
 elif [[ "$action" == "tree" ]]; then
-    pstree -p "$ps_id"
+    pstree -p "$pid"
 elif [[ "$action" == "terminate" ]]; then
-    _kill TERM $ps_id $ps_user
+    _kill TERM $pid $user
 elif [[ "$action" == "kill" ]]; then
-    _kill KILL $ps_id $ps_user
+    _kill KILL $pid $user
 elif [[ "$action" == "interrupt" ]]; then
-    _kill INT $ps_id $ps_user
+    _kill INT $pid $user
 elif [[ "$action" == "continue" ]]; then
-    _kill CONT $ps_id $ps_user
+    _kill CONT $pid $user
 elif [[ "$action" == "stop" ]]; then
-    _kill STOP $ps_id $ps_user
+    _kill STOP $pid $user
 elif [[ "$action" == "quit" ]]; then
-    _kill QUIT $ps_id $ps_user
+    _kill QUIT $pid $user
 elif [[ "$action" == "hangup" ]]; then
-    _kill HUP $ps_id $ps_user
+    _kill HUP $pid $user
 fi
