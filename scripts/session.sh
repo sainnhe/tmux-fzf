@@ -12,13 +12,18 @@ fi
 
 FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select an action.'"
 if [[ -z "$1" ]]; then
-    action=$(printf "attach\ndetach\nrename\nkill\n[cancel]" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
+    action=$(printf "attach\ndetach\nnew\nrename\nkill\n[cancel]" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
 else
     action="$1"
 fi
 
 [[ "$action" == "[cancel]" || -z "$action" ]] && exit
 if [[ "$action" != "detach" ]]; then
+    if [[ "$action" == "new" ]]; then
+        tmux split-window -v -p 30 -b -c '#{pane_current_path}' \
+            'printf "Session Name: " && read session_name && tmux new-session -d -s ${session_name} && tmux switch-client -t ${session_name}'
+        exit
+    fi
     if [[ "$action" == "kill" ]]; then
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select target session(s). Press TAB to mark multiple items.'"
     else
