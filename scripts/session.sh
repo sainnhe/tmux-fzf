@@ -43,7 +43,7 @@ else
     target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_session:/")
 fi
 [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
-target=$(echo "$target_origin" | grep -o '^[[:alpha:][:digit:]_-]*:' | sed 's/.$//g')
+target=$(echo "$target_origin" | grep -o '^[[:alpha:][:digit:]/_-]*:' | sed 's/.$//g')
 if [[ "$action" == "attach" ]]; then
     echo "$target" | xargs tmux switch-client -t
 elif [[ "$action" == "detach" ]]; then
