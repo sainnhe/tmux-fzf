@@ -45,7 +45,7 @@ fi
 [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
 target=$(echo "$target_origin" | sed -e 's/:.*$//')
 if [[ "$action" == "attach" ]]; then
-    echo "$target" | xargs -I{} tmux switch-client -t "{}"
+    tmux switch-client -t "$target"
 elif [[ "$action" == "detach" ]]; then
     echo "$target" | xargs -I{} tmux detach -s "{}"
 elif [[ "$action" == "kill" ]]; then
