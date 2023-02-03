@@ -43,13 +43,13 @@ else
     target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_session:/")
 fi
 [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
-target=$(echo "$target_origin" | grep -o '^[[:alpha:][:digit:]/_-]*:' | sed 's/.$//g')
+target=$(echo "$target_origin" | sed -e 's/:.*$//')
 if [[ "$action" == "attach" ]]; then
-    echo "$target" | xargs tmux switch-client -t
+    echo "$target" | xargs -I{} tmux switch-client -t "{}"
 elif [[ "$action" == "detach" ]]; then
-    echo "$target" | xargs -I{} tmux detach -s {}
+    echo "$target" | xargs -I{} tmux detach -s "{}"
 elif [[ "$action" == "kill" ]]; then
-    echo "$target" | sort -r | xargs -I{} tmux kill-session -t {}
+    echo "$target" | sort -r | xargs -I{} tmux kill-session -t "{}"
 elif [[ "$action" == "rename" ]]; then
     tmux command-prompt -I "rename-session -t $target "
 fi
