@@ -2,7 +2,7 @@
 
 # Features
 
-- Manage sessions (attach, detach, new, rename, kill).
+- Manage sessions (switch, new, rename, detach, kill).
 - Manage windows (switch, link, move, swap, rename, kill).
 - Manage panes (switch, break, join, swap, layout, kill, resize, rename).
 - Search commands and append to command prompt.
