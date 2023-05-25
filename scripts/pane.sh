@@ -64,9 +64,9 @@ else
     [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
     target=$(echo "$target_origin" | sed 's/: .*//')
     if [[ "$action" == "switch" ]]; then
-        echo "$target" | sed -E 's/:.*//g' | xargs tmux switch-client -t
-        echo "$target" | sed -E 's/\..*//g' | xargs tmux select-window -t
-        echo "$target" | xargs tmux select-pane -t
+        echo "$target" | sed -E 's/:.*//g' | xargs -I{} tmux switch-client -t {}
+        echo "$target" | sed -E 's/\..*//g' | xargs -I{} tmux select-window -t {}
+        echo "$target" | xargs -I{} tmux select-pane -t {}
     elif [[ "$action" == "kill" ]]; then
         echo "$target" | sort -r | xargs -I{} tmux kill-pane -t {}
     elif [[ "$action" == "swap" ]]; then
