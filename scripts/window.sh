@@ -65,7 +65,7 @@ else
         target_swap=$(echo "$target_swap_origin" | sed 's/: .*//')
         tmux swap-pane -s "$target" -t "$target_swap"
     elif [[ "$action" == "switch" ]]; then
-        echo "$target" | sed 's/:.*//g' | xargs tmux switch-client -t
-        echo "$target" | xargs tmux select-window -t
+        echo "$target" | sed 's/:.*//g' | xargs -I{} tmux switch-client -t {}
+        echo "$target" | xargs -I{} tmux select-window -t {}
     fi
 fi
