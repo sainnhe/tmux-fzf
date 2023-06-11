@@ -1,5 +1,4 @@
-copy_mode_commands="
-append-selection                              Append the selected buffer to the clipboard
+copy_mode_commands="append-selection                              Append the selected buffer to the clipboard
 append-selection-and-cancel                   Append the selected buffer to the clipboard and cancel the current command
 back-to-indentation                           Move the cursor back to the indentation
 begin-selection                               Begin selection in the buffer
