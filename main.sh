@@ -6,7 +6,7 @@ source "$CURRENT_DIR/scripts/.envs"
 
 # remove copy-mode from options if we aren't in copy-mode
 if [[ "$TMUX_FZF_ORDER" == *"copy-mode"* ]] && [ "$(tmux display-message -p '#{pane_in_mode}')" -eq 0 ]; then
-    TMUX_FZF_ORDER="$(echo $TMUX_FZF_ORDER | sed -E 's/\|?copy-mode\|?/|/')"
+    TMUX_FZF_ORDER="$(echo $TMUX_FZF_ORDER | sed -E 's/\|?copy-mode\|?//')"
 fi
 
 items_origin="$(echo $TMUX_FZF_ORDER | tr '|' '\n')"
