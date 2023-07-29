@@ -14,12 +14,14 @@ fi
 
 if [[ "$action" == "system" ]]; then
     item_numbers=$(copyq count)
+    contents="[cancel]\n"
     index=0
     while [ "$index" -lt "$item_numbers" ]; do
-        copyq_list="$copyq_list $index"
+        _content="$(copyq read ${index} | tr '\n' ' ' | tr '\\n' ' ')"
+        contents="${contents}copy${index}: ${_content}\n"
         index=$((index + 1))
     done
-    copyq_index=$(echo "[cancel] $copyq_list" | sed -e 's/\] /]/' -e 's/ /\n/g' | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS --preview='copyq read {}'")
+    copyq_index=$(printf "$contents" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS --preview=\"echo {} | sed -e 's/^copy//' -e 's/: .*//' | xargs -I{} copyq read {}\"" | sed -e 's/^copy//' -e 's/: .*//')
     [[ "$copyq_index" == "[cancel]" || -z "$copyq_index" ]] && exit
     echo "$copyq_index" | xargs -I{} sh -c 'tmux set-buffer -b _temp_tmux_fzf "$(copyq read {})" && tmux paste-buffer -b _temp_tmux_fzf && tmux delete-buffer -b _temp_tmux_fzf'
 elif [[ "$action" == "buffer" ]]; then
