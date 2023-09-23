@@ -5,10 +5,17 @@ source "$CURRENT_DIR/.envs"
 
 current_window_origin=$(tmux display-message -p '#S:#I: #{window_name}')
 current_window=$(tmux display-message -p '#S:#I:')
-if [[ -z "$TMUX_FZF_WINDOW_FORMAT" ]]; then
-    windows=$(tmux list-windows -a)
+
+if [[ -z  "$TMUX_FZF_WINDOW_FILTER" ]]; then
+  window_filter="-a"
 else
-    windows=$(tmux list-windows -a -F "#S:#{window_index}: $TMUX_FZF_WINDOW_FORMAT")
+  window_filter="-f \"$TMUX_FZF_WINDOW_FILTER\""
+fi
+
+if [[ -z "$TMUX_FZF_WINDOW_FORMAT" ]]; then
+    windows=$(tmux list-windows $window_filter)
+else
+    windows=$(tmux list-windows $window_filter -F "#S:#{window_index}: $TMUX_FZF_WINDOW_FORMAT")
 fi
 
 FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select an action.'"
