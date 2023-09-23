@@ -154,6 +154,13 @@ Similarly, `TMUX_FZF_WINDOW_FORMAT` and `TMUX_FZF_SESSION_FORMAT` can also be ha
 
 For more information, check "FORMATS" section in tmux manual.
 
+
+## Filter
+
+When using the window listing script, it is possible to filter its output. This relies on the tmux filtering feature with a specific syntax for filters. For more information about this feature, check "FORMATS" section in the tmux manual.
+
+To use this filtering feature, set the variable `TMUX_FZF_WINDOW_FILTER` to the filter you want to apply before calling the `window.sh` script. 
+
 # FAQ
 
 **Q: Why use environment variables instead of tmux options to customize this plugin?**
