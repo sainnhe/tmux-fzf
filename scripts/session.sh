@@ -21,7 +21,7 @@ fi
 if [[ "$action" != "detach" ]]; then
     if [[ "$action" == "new" ]]; then
         tmux split-window -v -p 30 -b -c '#{pane_current_path}' \
-            'printf "Session Name: " && read session_name && tmux new-session -d -s ${session_name} && tmux switch-client -t ${session_name}'
+            "bash -c 'printf \'Session Name: \' && read session_name && tmux new-session -d -s \$session_name && tmux switch-client -t \$session_name'"
         exit
     fi
     if [[ "$action" == "kill" ]]; then
