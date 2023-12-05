@@ -84,6 +84,6 @@ else
         ((last_win_num_after = last_win_num + 1))
         tmux break-pane -s "$target" -t "$cur_ses":"$last_win_num_after"
     elif [[ "$action" == "rename" ]]; then
-        tmux command-prompt -I "select-pane -t ${target} -T "
+        tmux command-prompt -I "select-pane -t \"${target}\" -T "
     fi
 fi
