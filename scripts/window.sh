@@ -70,7 +70,7 @@ else
         target_swap_origin=$(printf "%s\n[cancel]" "$windows" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
         [[ "$target_swap_origin" == "[cancel]" || -z "$target_swap_origin" ]] && exit
         target_swap=$(echo "$target_swap_origin" | sed 's/: .*//')
-        tmux swap-pane -s "$target" -t "$target_swap"
+        tmux swap-window -s "$target" -t "$target_swap"
     elif [[ "$action" == "switch" ]]; then
         echo "$target" | sed 's/:.*//g' | xargs -I{} tmux switch-client -t {}
         echo "$target" | xargs -I{} tmux select-window -t {}
