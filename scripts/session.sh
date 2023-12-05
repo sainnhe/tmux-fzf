@@ -51,5 +51,5 @@ elif [[ "$action" == "detach" ]]; then
 elif [[ "$action" == "kill" ]]; then
     echo "$target" | sort -r | xargs -I{} tmux kill-session -t "{}"
 elif [[ "$action" == "rename" ]]; then
-    tmux command-prompt -I "rename-session -t $target "
+    tmux command-prompt -I "rename-session -t \"$target\" "
 fi

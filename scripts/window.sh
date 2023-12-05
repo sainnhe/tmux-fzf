@@ -63,7 +63,7 @@ else
     if [[ "$action" == "kill" ]]; then
         echo "$target" | sort -r | xargs -I{} tmux unlink-window -k -t {}
     elif [[ "$action" == "rename" ]]; then
-        tmux command-prompt -I "rename-window -t $target "
+        tmux command-prompt -I "rename-window -t \"$target\" "
     elif [[ "$action" == "swap" ]]; then
         windows=$(echo "$windows" | grep -v "^$target")
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select another target window.'"
