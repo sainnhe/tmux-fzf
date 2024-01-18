@@ -53,7 +53,7 @@ else
     fi
     if [[ "$action" != "switch" ]]; then
         target_origin=$(printf "[current]\n%s\n[cancel]" "$windows" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
-        target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_window_origin/")
+        target_origin=${target_origin/\[current\]/$current_window_origin}
     else
         windows=$(echo "$windows" | grep -v "^$current_window")
         target_origin=$(printf "%s\n[cancel]" "$windows" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")

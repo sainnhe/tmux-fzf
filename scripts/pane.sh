@@ -59,7 +59,7 @@ else
         target_origin=$(printf "%s\n[cancel]" "$panes" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
     else
         target_origin=$(printf "[current]\n%s\n[cancel]" "$panes" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
-        target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_pane_origin/")
+        target_origin=${target_origin/\[current\]/$current_pane_origin}
     fi
     [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
     target=$(echo "$target_origin" | sed 's/: .*//')
