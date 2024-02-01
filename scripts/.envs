@@ -27,7 +27,11 @@ else
 fi
 
 # $TMUX_FZF_BIN
-TMUX_FZF_BIN="$current_dir/.fzf-tmux"
+if [ -x "$(command -v fzf-tmux)" ]; then
+  TMUX_FZF_BIN="$(which fzf-tmux)"
+else
+  TMUX_FZF_BIN="$current_dir/.fzf-tmux"
+fi
 
 # $TMUX_FZF_OPTIONS
 tmux_version=$(tmux -V | grep -oE '[0-9]+\.[0-9]*')
