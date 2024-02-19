@@ -29,17 +29,17 @@ _kill() { #{{{ _kill SIG PID USER
         kill -s $1 $2
     else
         if [ -x "$(command -v sudo)" ]; then
-            tmux split-window -v -p 30 -b -c '#{pane_current_path}' "bash -c 'sudo kill -s $1 $2'"
+            tmux split-window -v -l 30% -b -c '#{pane_current_path}' "bash -c 'sudo kill -s $1 $2'"
         elif [ -x "$(command -v doas)" ]; then
-            tmux split-window -v -p 30 -b -c '#{pane_current_path}' "bash -c 'doas kill -s $1 $2'"
+            tmux split-window -v -l 30% -b -c '#{pane_current_path}' "bash -c 'doas kill -s $1 $2'"
         fi
     fi
 } #}}}
 if [[ "$action" == "display" ]]; then
     if [[ "$(uname)" == "Linux" ]]; then
-        tmux split-window -v -p 50 -b -c '#{pane_current_path}' "top -p $pid"
+        tmux split-window -v -l 50% -b -c '#{pane_current_path}' "top -p $pid"
     else
-        tmux split-window -v -p 50 -b -c '#{pane_current_path}' "top -pid $pid"
+        tmux split-window -v -l 50% -b -c '#{pane_current_path}' "top -pid $pid"
     fi
 elif [[ "$action" == "tree" ]]; then
     pstree -p "$pid"
