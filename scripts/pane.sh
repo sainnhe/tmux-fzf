@@ -55,7 +55,9 @@ else
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select target pane.'"
     fi
     if [[ "$action" == "switch" || "$action" == "join" ]]; then
-        panes=$(echo "$panes" | grep -v "^$current_pane")
+        if [[ -z "$TMUX_FZF_SWITCH_CURRENT" || "$action" == "join" ]]; then
+            panes=$(echo "$panes" | grep -v "^$current_pane")
+        fi
         target_origin=$(printf "%s\n[cancel]" "$panes" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
     else
         target_origin=$(printf "[current]\n%s\n[cancel]" "$panes" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
