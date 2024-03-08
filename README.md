@@ -157,6 +157,12 @@ For more information, check "FORMATS" section in tmux manual.
 
 ## Filter
 
+By default, the current session, window, and pane, are not listed among the switch possibilities. To include it, set:
+
+```tmux
+TMUX_FZF_SWITCH_CURRENT=1
+```
+
 When using the window listing script, it is possible to filter its output. This relies on the tmux filtering feature with a specific syntax for filters. For more information about this feature, check "FORMATS" section in the tmux manual.
 
 To use this filtering feature, set the variable `TMUX_FZF_WINDOW_FILTER` to the filter you want to apply before calling the `window.sh` script. 

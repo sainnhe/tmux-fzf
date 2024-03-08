@@ -55,7 +55,9 @@ else
         target_origin=$(printf "[current]\n%s\n[cancel]" "$windows" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
         target_origin=${target_origin/\[current\]/$current_window_origin}
     else
-        windows=$(echo "$windows" | grep -v "^$current_window")
+        if [[ -z "$TMUX_FZF_SWITCH_CURRENT" ]]; then
+            windows=$(echo "$windows" | grep -v "^$current_window")
+        fi
         target_origin=$(printf "%s\n[cancel]" "$windows" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
     fi
     [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
