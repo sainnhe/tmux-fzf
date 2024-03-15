@@ -24,8 +24,8 @@ fi
 [[ "$action" == "[cancel]" || -z "$action" ]] && exit
 if [[ "$action" != "detach" ]]; then
     if [[ "$action" == "new" ]]; then
-        tmux split-window -v -l 30% -b -c '#{pane_current_path}' \
-            "bash -c 'printf \"Session Name: \" && read session_name && tmux new-session -d -s \"\$session_name\" && tmux switch-client -t \"\$session_name\"'"
+        session_name=$(tmux command-prompt -p "Session Name:" "display-message -p '%%'")
+        tmux new-session -d -s "$session_name" && tmux switch-client -t "$session_name"
         exit
     fi
     if [[ "$action" == "kill" ]]; then
