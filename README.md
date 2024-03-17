@@ -4,7 +4,7 @@
 
 - Manage sessions (switch, new, rename, detach, kill).
 - Manage windows (switch, link, move, swap, rename, kill).
-- Manage panes (switch, break, join, swap, layout, kill, resize, rename).
+- Manage panes (switch, break, join, swap, layout, kill, resize).
 - Search commands and append to command prompt.
 - Search key bindings and execute.
 - Search clipboard history and paste to current window.

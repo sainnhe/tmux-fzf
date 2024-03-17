@@ -23,11 +23,6 @@ fi
 
 [[ "$action" == "[cancel]" || -z "$action" ]] && exit
 if [[ "$action" != "detach" ]]; then
-    if [[ "$action" == "new" ]]; then
-        session_name=$(tmux command-prompt -p "Session Name:" "display-message -p '%%'")
-        tmux new-session -d -s "$session_name" && tmux switch-client -t "$session_name"
-        exit
-    fi
     if [[ "$action" == "kill" ]]; then
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select target session(s). Press TAB to mark multiple items.'"
     else
@@ -35,9 +30,19 @@ if [[ "$action" != "detach" ]]; then
     fi
     if [[ "$action" == "switch" ]]; then
         target_origin=$(printf "%s\n[cancel]" "$sessions" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
-    else
+    elif [[ "$action" != "new" ]]; then
         target_origin=$(printf "[current]\n%s\n[cancel]" "$sessions" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
         target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_session:/")
+    fi
+    if [[ "$action" == "new" || "$action" == "rename" ]]; then
+        session_name=$(tmux command-prompt -p "Session Name:" "display-message -p '%%'")
+        if [ -z "$session_name" ]; then
+            exit
+        fi
+        if [[ "$action" == "new" ]]; then
+            tmux new-session -d -s "$session_name" && tmux switch-client -t "$session_name"
+            exit
+        fi
     fi
 else
     tmux_attached_sessions=$(tmux list-sessions | grep 'attached' | grep -o '^[[:alpha:][:digit:]_-]*:' | sed 's/.$//g')
@@ -55,5 +60,5 @@ elif [[ "$action" == "detach" ]]; then
 elif [[ "$action" == "kill" ]]; then
     echo "$target" | sort -r | xargs -I{} tmux kill-session -t "{}"
 elif [[ "$action" == "rename" ]]; then
-    tmux command-prompt -I "rename-session -t \"$target\" "
+    tmux rename-session -t "$target" "$session_name"
 fi

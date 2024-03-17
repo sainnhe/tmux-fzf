@@ -14,7 +14,7 @@ fi
 
 FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select an action.'"
 if [[ -z "$1" ]]; then
-    action=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\nresize\nrename\n[cancel]" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
+    action=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\nresize\n[cancel]" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
 else
     action="$1"
 fi
@@ -85,7 +85,5 @@ else
         last_win_num=$(tmux list-windows | sort -nr | head -1 | sed 's/:.*//')
         ((last_win_num_after = last_win_num + 1))
         tmux break-pane -s "$target" -t "$cur_ses":"$last_win_num_after"
-    elif [[ "$action" == "rename" ]]; then
-        tmux command-prompt -I "select-pane -t \"${target}\" -T "
     fi
 fi
