@@ -65,7 +65,10 @@ else
     if [[ "$action" == "kill" ]]; then
         echo "$target" | sort -r | xargs -I{} tmux unlink-window -k -t {}
     elif [[ "$action" == "rename" ]]; then
-        window_name=$(tmux command-prompt -p "Window Name:" "display-message -p '%%'")
+        mkfifo /tmp/tmux_fzf_window_name
+        tmux split-window -v -l 30% -b "bash -c 'printf \"Window Name: \" && read window_name && echo \"\$window_name\" > /tmp/tmux_fzf_window_name'" &
+        window_name=$(cat /tmp/tmux_fzf_window_name)
+        rm /tmp/tmux_fzf_window_name
         if [ -z "$window_name" ]; then
             exit
         fi
