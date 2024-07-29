@@ -11,12 +11,14 @@ compare_float() {
 }
 
 # $TMUX_FZF_PREVIEW_OPTIONS
+TMUX_FZF_PREVIEW_FOLLOW="${TMUX_FZF_PREVIEW_FOLLOW:-1}"
 fzf_version=$(fzf --version)
 fzf_version_1=$(echo "$fzf_version" | grep -o '^[[:digit:]]*\.[[:digit:]]*')
 fzf_version_2=$(echo "$fzf_version" | grep -o '^[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*' | sed 's/[[:digit:]]*\.//')
 if [ $(compare_float $fzf_version_1 "0.24") == ">" ] ||
   [ $fzf_version_1 == "0.24" ] &&
-  [ $(compare_float $fzf_version_2 "24.3") == ">" ]; then
+  [ $(compare_float $fzf_version_2 "24.3") == ">" ] &&
+  [ "$TMUX_FZF_PREVIEW_FOLLOW" == 1 ]; then
   fzf_preview_window_follow=":follow" # :follow option is only available in fzf >= 0.24.4
 fi
 TMUX_FZF_PREVIEW="${TMUX_FZF_PREVIEW:-1}"
