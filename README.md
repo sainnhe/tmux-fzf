@@ -124,6 +124,12 @@ TMUX_FZF_PREVIEW=0
 
 Then the preview window will be hidden until `toggle-preview` is triggered.
 
+By default, the preview window will try to "follow" the content (see description in [the fzf docs](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#log-tailing)). You can opt out this behavior using the following:
+
+```tmux
+TMUX_FZF_PREVIEW_FOLLOW=0
+```
+
 ## Order
 
 To customize the order of the actions, add something like this to your `~/.tmux.conf`:
