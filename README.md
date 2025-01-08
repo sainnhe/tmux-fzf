@@ -33,7 +33,7 @@ Add this line to your `~/.tmux.conf`
 set -g @plugin 'sainnhe/tmux-fzf'
 ```
 
-Reload configuration, then press `prefix` + `I`.
+Reload configuration, then press `prefix` + `I` (Shift+I).
 
 # Usage
 
