@@ -82,6 +82,43 @@ When you select `sh`, tmux will execute `sh ~/test.sh`.
 - **DO NOT** add additional white spaces/tabs at the beginning of each line.
 - Commands are executed using `tmux -c`, so please make sure `tmux -c "your command"` does work.
 
+### Alternative format for TMUX_FZF_MENU
+
+Here each menu item (`name + command`) consist of 3 lines:
+
+1. name: Name of the item on the menu selection.
+2. command: what will be execute when you select that item on the menu.
+3. end of line (menu item): required end of line per menu item.
+
+```tmux
+TMUX_FZF_MENU="\
+foo\n\              <- name
+echo 'Hello!'\      <- command
+\n""\               <- end of line
+bar\n\
+ls ~\
+\n""\
+sh\n\
+sh ~/test.sh\
+\n""\
+nil--\n\n"          <- this is required
+```
+
+### Menu Popup
+
+You can configure the menu output to appear on a popup window instead of the current pane you're on.
+
+To enable this set the `TMUX_FZF_MENU_POPUP=1` variable.
+
+You can also set the width and height for the popup window.
+
+Default values:
+
+```
+TMUX_FZF_MENU_POPUP_WIDTH=50%
+TMUX_FZF_MENU_POPUP_HEIGHT=50%
+```
+
 ## Popup Window
 
 Popup window is a new feature introduced in tmux 3.2 . To enable this feature, you'll need to have tmux >= 3.2 installed.
