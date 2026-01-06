@@ -63,7 +63,7 @@ elif [[ -n "$2" ]]; then
     if [[ "$action" == "switch" ]]; then
         echo "$target" | sed -E 's/:.*//g' | xargs -I{} tmux switch-client -t {}
         echo "$target" | sed -E 's/\..*//g' | xargs -I{} tmux select-window -t {}
-        tmux select-pane -t "$target"
+        echo "$target" | xargs -I{} tmux select-pane -t {}
     elif [[ "$action" == "kill" ]]; then
         tmux kill-pane -t "$target"
     elif [[ "$action" == "swap" ]]; then

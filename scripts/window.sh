@@ -48,7 +48,7 @@ if [[ -n "$2" ]]; then
         tmux swap-window -s "$target" -t "$target_swap"
     elif [[ "$action" == "switch" ]]; then
         echo "$target" | sed 's/:.*//g' | xargs -I{} tmux switch-client -t {}
-        tmux select-window -t "$target"
+        echo "$target" | xargs -I{} tmux select-window -t {}
     fi
 else
     # Original fzf selection logic

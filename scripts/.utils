@@ -38,7 +38,7 @@ select_swap_target() {
 # Usage: break_pane_to_window "$target"
 break_pane_to_window() {
     local target="$1"
-    local cur_ses=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')
+    local cur_ses=$(tmux display-message -p | sed -e 's/^\[//' -e 's/\].*//')
     local last_win_num=$(tmux list-windows | sort -nr | head -1 | sed 's/:.*//')
     local next_win=$((last_win_num + 1))
     tmux break-pane -s "$target" -t "$cur_ses":"$next_win"
@@ -47,7 +47,7 @@ break_pane_to_window() {
 # Get current session name
 # Usage: ses=$(get_current_session)
 get_current_session() {
-    tmux display-message -p | sed -e 's/^.//' -e 's/].*//'
+    tmux display-message -p | sed -e 's/^\[//' -e 's/\].*//'
 }
 
 # Select source window from other sessions (for link/move)
