@@ -13,49 +13,49 @@ current_pane=$(tmux display-message -p '#S:#{window_index}.#{pane_index}')
 generate_candidates() {
     # ========== Session commands ==========
     # new session (no target)
-    echo "[ses] new  # create new session"
+    echo "[S] new  # create new session"
 
     # session × actions
     tmux list-sessions -F '#{session_name}|#{session_windows}|#{session_attached}' 2>/dev/null | while IFS='|' read -r name wins attached; do
         local mark=""
         [[ "$attached" == "1" ]] && mark="*"
         # Direct execution
-        echo "[ses] switch $name  # $mark ($wins win)"
-        echo "[ses] kill $name  # $mark"
-        echo "[ses] detach $name  # $mark"
+        echo "[S] switch $name  # $mark ($wins win)"
+        echo "[S] kill $name  # $mark"
+        echo "[S] detach $name  # $mark"
         # Interactive (rename needs input)
-        echo "[ses] rename $name  # $mark -> input new name"
+        echo "[S] rename $name  # $mark -> input new name"
     done
 
     # [current] session
-    echo "[ses] rename [current]  # -> input new name"
+    echo "[S] rename [current]  # -> input new name"
 
     # ========== Window commands ==========
     # new window (no target)
-    echo "[win] new  # create new window"
-    echo "[win] split-h  # split horizontal"
-    echo "[win] split-v  # split vertical"
+    echo "[W] new  # create new window"
+    echo "[W] split-h  # split horizontal"
+    echo "[W] split-v  # split vertical"
 
     # window × actions
     tmux list-windows -a -F '#{session_name}:#{window_index}|#{window_name}|#{window_active}' 2>/dev/null | while IFS='|' read -r target wname active; do
         local mark=""
         [[ "$active" == "1" ]] && mark="*"
         # Direct execution
-        echo "[win] switch $target  # $wname $mark"
-        echo "[win] kill $target  # $wname"
+        echo "[W] switch $target  # $wname $mark"
+        echo "[W] kill $target  # $wname"
         # Interactive
-        echo "[win] rename $target  # $wname -> input new name"
-        echo "[win] swap $target  # $wname -> select another"
+        echo "[W] rename $target  # $wname -> input new name"
+        echo "[W] swap $target  # $wname -> select another"
     done
 
     # [current] window
-    echo "[win] rename [current]  # -> input new name"
-    echo "[win] kill [current]"
-    echo "[win] swap [current]  # -> select another"
+    echo "[W] rename [current]  # -> input new name"
+    echo "[W] kill [current]"
+    echo "[W] swap [current]  # -> select another"
 
     # link/move (original fzf flow)
-    echo "[win] link  # -> select source window"
-    echo "[win] move  # -> select source window"
+    echo "[W] link  # -> select source window"
+    echo "[W] move  # -> select source window"
 
     # ========== Pane commands ==========
     # pane × actions
@@ -63,24 +63,24 @@ generate_candidates() {
         local mark=""
         [[ "$active" == "1" ]] && mark="*"
         # Direct execution
-        echo "[pane] switch $target  # $pcmd $mark"
-        echo "[pane] kill $target  # $pcmd"
-        echo "[pane] zoom $target  # $pcmd"
-        echo "[pane] break $target  # $pcmd -> new window"
+        echo "[P] switch $target  # $pcmd $mark"
+        echo "[P] kill $target  # $pcmd"
+        echo "[P] zoom $target  # $pcmd"
+        echo "[P] break $target  # $pcmd -> new window"
         # Interactive
-        echo "[pane] swap $target  # $pcmd -> select another"
-        echo "[pane] join $target  # $pcmd -> move here"
+        echo "[P] swap $target  # $pcmd -> select another"
+        echo "[P] join $target  # $pcmd -> move here"
     done
 
     # [current] pane
-    echo "[pane] zoom [current]"
-    echo "[pane] kill [current]"
-    echo "[pane] break [current]  # -> new window"
-    echo "[pane] swap [current]  # -> select another"
+    echo "[P] zoom [current]"
+    echo "[P] kill [current]"
+    echo "[P] break [current]  # -> new window"
+    echo "[P] swap [current]  # -> select another"
 
     # layout/resize (sub-menu, no target)
-    echo "[pane] layout  # -> select layout"
-    echo "[pane] resize  # -> select direction & size"
+    echo "[P] layout  # -> select layout"
+    echo "[P] resize  # -> select direction & size"
 }
 
 # Create preview script
@@ -113,7 +113,7 @@ echo "$preview_script" > "$preview_file"
 chmod +x "$preview_file"
 
 # Set header
-FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Tmux Command Palette  [ses] [win] [pane]'"
+FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Tmux Command Palette  [S]ession [W]indow [P]ane'"
 
 # Determine preview options
 if [[ "$TMUX_FZF_PREVIEW" != "0" ]]; then
@@ -139,7 +139,7 @@ target=$(echo "$rest" | awk '{print $2}')
 
 # Dispatch based on type and action
 case "$type" in
-    "[ses]")
+    "[S]")
         case "$action" in
             switch)
                 tmux switch-client -t "$target"
@@ -159,7 +159,7 @@ case "$type" in
                 ;;
         esac
         ;;
-    "[win]")
+    "[W]")
         case "$action" in
             switch)
                 # Switch to session first, then window
@@ -197,7 +197,7 @@ case "$type" in
                 ;;
         esac
         ;;
-    "[pane]")
+    "[P]")
         case "$action" in
             switch)
                 session=$(echo "$target" | sed -E 's/:.*//g')
