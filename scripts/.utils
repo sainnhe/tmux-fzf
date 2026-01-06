@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Common utility functions for tmux-fzf scripts
+
+# Prompt for name input via tmux split-window
+# Usage: name=$(prompt_name "Session Name") || exit
+prompt_name() {
+    local prompt="$1"
+    local fifo=$(mktemp -u "/tmp/tmux_fzf_name_XXXXXX")
+    mkfifo "$fifo" || return 1
+    # Use timeout to prevent hanging if user closes window without input
+    tmux split-window -v -l 30% -b "bash -c 'printf \"%s: \" \"$prompt\" && read name && echo \"\$name\" > $fifo'" &
+    local result
+    # Read with timeout (30 seconds)
+    if command -v timeout &>/dev/null; then
+        result=$(timeout 30 cat "$fifo" 2>/dev/null)
+    else
+        result=$(cat "$fifo")
+    fi
+    rm -f "$fifo"
+    [[ -z "$result" ]] && return 1
+    echo "$result"
+}
+
+# Select swap target from list (excludes current target)
+# Usage: target=$(select_swap_target "$items" "$exclude" "header text") || exit
+select_swap_target() {
+    local items="$1"
+    local exclude="$2"
+    local header="$3"
+    local filtered=$(echo "$items" | grep -v "^$exclude")
+    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='$header'"
+    local selected=$(printf "%s\n[cancel]" "$filtered" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
+    [[ "$selected" == "[cancel]" || -z "$selected" ]] && return 1
+    echo "$selected" | sed 's/: .*//'
+}
+
+# Break pane to new window
+# Usage: break_pane_to_window "$target"
+break_pane_to_window() {
+    local target="$1"
+    local cur_ses=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')
+    local last_win_num=$(tmux list-windows | sort -nr | head -1 | sed 's/:.*//')
+    local next_win=$((last_win_num + 1))
+    tmux break-pane -s "$target" -t "$cur_ses":"$next_win"
+}
+
+# Get current session name
+# Usage: ses=$(get_current_session)
+get_current_session() {
+    tmux display-message -p | sed -e 's/^.//' -e 's/].*//'
+}
+
+# Select source window from other sessions (for link/move)
+# Usage: src_win=$(select_source_window "$windows") || exit
+# Returns: selected window target (session:index)
+select_source_window() {
+    local windows="$1"
+    local cur_ses=$(get_current_session)
+    local filtered=$(echo "$windows" | grep -v "^$cur_ses")
+    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select source window.'"
+    local selected=$(printf "%s\n[cancel]" "$filtered" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
+    [[ "$selected" == "[cancel]" || -z "$selected" ]] && return 1
+    echo "$selected" | sed 's/: .*//'
+}

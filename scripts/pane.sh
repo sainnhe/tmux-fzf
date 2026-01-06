@@ -2,6 +2,7 @@
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$CURRENT_DIR/.envs"
+source "$CURRENT_DIR/.utils"
 
 current_pane_origin=$(tmux display-message -p '#S:#{window_index}.#{pane_index}: #{window_name}')
 current_pane=$(tmux display-message -p '#S:#{window_index}.#{pane_index}')
@@ -14,12 +15,14 @@ fi
 
 FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select an action.'"
 if [[ -z "$1" ]]; then
-    action=$(printf "switch\nbreak\njoin\nswap\nlayout\nkill\nresize\n[cancel]" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
+    action=$(printf "switch\nzoom\nbreak\njoin\nswap\nlayout\nkill\nresize\n[cancel]" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
 else
     action="$1"
 fi
 
 [[ "$action" == "[cancel]" || -z "$action" ]] && exit
+
+# layout and resize have sub-menus, no target needed
 if [[ "$action" == "layout" ]]; then
     FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select a layout.'"
     target_origin=$(printf "even-horizontal\neven-vertical\nmain-horizontal\nmain-vertical\ntiled\n[cancel]" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
@@ -48,7 +51,33 @@ elif [[ "$action" == "resize" ]]; then
             tmux resize-pane -D "$size"
         fi
     fi
+# Support $2 as pre-selected target (for unified.sh integration)
+elif [[ -n "$2" ]]; then
+    # Handle [current] special case
+    if [[ "$2" == "[current]" ]]; then
+        target="$current_pane"
+    else
+        target="$2"
+    fi
+    # Execute based on action with pre-selected target
+    if [[ "$action" == "switch" ]]; then
+        echo "$target" | sed -E 's/:.*//g' | xargs -I{} tmux switch-client -t {}
+        echo "$target" | sed -E 's/\..*//g' | xargs -I{} tmux select-window -t {}
+        tmux select-pane -t "$target"
+    elif [[ "$action" == "kill" ]]; then
+        tmux kill-pane -t "$target"
+    elif [[ "$action" == "swap" ]]; then
+        target_swap=$(select_swap_target "$panes" "$target" "Select another target pane.") || exit
+        tmux swap-pane -s "$target" -t "$target_swap"
+    elif [[ "$action" == "join" ]]; then
+        tmux move-pane -s "$target"
+    elif [[ "$action" == "break" ]]; then
+        break_pane_to_window "$target"
+    elif [[ "$action" == "zoom" ]]; then
+        tmux resize-pane -Z -t "$target"
+    fi
 else
+    # Original fzf selection logic
     if [[ "$action" == "join" || "$action" == "kill" ]]; then
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select target pane(s). Press TAB to mark multiple items.'"
     else
@@ -71,19 +100,14 @@ else
         echo "$target" | xargs -I{} tmux select-pane -t {}
     elif [[ "$action" == "kill" ]]; then
         echo "$target" | sort -r | xargs -I{} tmux kill-pane -t {}
+    elif [[ "$action" == "zoom" ]]; then
+        tmux resize-pane -Z -t "$target"
     elif [[ "$action" == "swap" ]]; then
-        panes=$(echo "$panes" | grep -v "^$target")
-        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select another target pane.'"
-        target_swap_origin=$(printf "%s\n[cancel]" "$panes" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS $TMUX_FZF_PREVIEW_OPTIONS")
-        [[ "$target_swap_origin" == "[cancel]" || -z "$target_swap_origin" ]] && exit
-        target_swap=$(echo "$target_swap_origin" | sed 's/: .*//')
+        target_swap=$(select_swap_target "$panes" "$target" "Select another target pane.") || exit
         tmux swap-pane -s "$target" -t "$target_swap"
     elif [[ "$action" == "join" ]]; then
         echo "$target" | sort -r | xargs -I{} tmux move-pane -s {}
     elif [[ "$action" == "break" ]]; then
-        cur_ses=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')
-        last_win_num=$(tmux list-windows | sort -nr | head -1 | sed 's/:.*//')
-        ((last_win_num_after = last_win_num + 1))
-        tmux break-pane -s "$target" -t "$cur_ses":"$last_win_num_after"
+        break_pane_to_window "$target"
     fi
 fi
