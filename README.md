@@ -135,6 +135,20 @@ For example, to use `prefix` + `C-f` (Ctrl+F), add this line to your `~/.tmux.co
 TMUX_FZF_LAUNCH_KEY="C-f"
 ```
 
+You can also configure the launch key with a tmux option. This is useful when
+you prefer keeping plugin settings in tmux's option style:
+
+```tmux
+set -g @tmux-fzf-launch-key 'g'
+```
+
+The `TMUX_FZF_LAUNCH_KEY` environment variable takes precedence over the tmux
+option. If neither is set, tmux-fzf uses `prefix` + `F` by default.
+
+When choosing a key, avoid tmux's built-in default bindings unless you intend to
+override them. For example, `prefix` + `l` switches to the last window in tmux's
+default key bindings, while keys such as `g` or `C-f` are often safer choices.
+
 ## Fzf Behavior
 
 This plugin will read [fzf environment variables](https://github.com/junegunn/fzf/#environment-variables), so you can use these variables to customize the behavior of fzf (e.g. prompt and color).
