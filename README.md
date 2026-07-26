@@ -210,6 +210,18 @@ When using the window listing script, it is possible to filter its output. This 
 
 To use this filtering feature, set the variable `TMUX_FZF_WINDOW_FILTER` to the filter you want to apply before calling the `window.sh` script. 
 
+## Multiple Attached Clients
+
+When several tmux clients are attached to the same server (e.g. two terminals), tmux commands that need a client context have to know *which* client opened the menu. Since the scripts are executed detached via `run-shell -b`, tmux would otherwise fall back to the most recently active client - which may be the other terminal. This can make `switch` act on the wrong screen and may cause intermittent `'... returned 1'` errors.
+
+To pin all client-dependent commands to the client that opened the menu, the default launch key binding passes `#{client_tty}` via `$TMUX_FZF_CLIENT` automatically. If you call the scripts from your own key bindings, pass it yourself:
+
+```tmux
+bind-key a run-shell -b "TMUX_FZF_CLIENT='#{client_tty}' ~/.tmux/plugins/tmux-fzf/scripts/session.sh switch"
+```
+
+If `$TMUX_FZF_CLIENT` is unset, the behavior is unchanged (most recently active client).
+
 # FAQ
 
 **Q: Why use environment variables instead of tmux options to customize this plugin?**

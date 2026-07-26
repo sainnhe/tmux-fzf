@@ -3,8 +3,8 @@
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$CURRENT_DIR/.envs"
 
-current_pane_origin=$(tmux display-message -p '#S:#{window_index}.#{pane_index}: #{window_name}')
-current_pane=$(tmux display-message -p '#S:#{window_index}.#{pane_index}')
+current_pane_origin=$(tmux display-message -p $TMUX_FZF_CLIENT_ARG '#S:#{window_index}.#{pane_index}: #{window_name}')
+current_pane=$(tmux display-message -p $TMUX_FZF_CLIENT_ARG '#S:#{window_index}.#{pane_index}')
 
 if [[ -z "$TMUX_FZF_PANE_FORMAT" ]]; then
     panes=$(tmux list-panes -a -F "#S:#{window_index}.#{pane_index}: [#{window_name}:#{pane_title}] #{pane_current_command}  [#{pane_width}x#{pane_height}] [history #{history_size}/#{history_limit}, #{history_bytes} bytes] #{?pane_active,[active],[inactive]}")
@@ -66,7 +66,7 @@ else
     [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
     target=$(echo "$target_origin" | sed 's/: .*//')
     if [[ "$action" == "switch" ]]; then
-        echo "$target" | sed -E 's/:.*//g' | xargs -I{} tmux switch-client -t {}
+        echo "$target" | sed -E 's/:.*//g' | xargs -I{} tmux switch-client $TMUX_FZF_CLIENT_ARG -t {}
         echo "$target" | sed -E 's/\..*//g' | xargs -I{} tmux select-window -t {}
         echo "$target" | xargs -I{} tmux select-pane -t {}
     elif [[ "$action" == "kill" ]]; then
@@ -81,7 +81,7 @@ else
     elif [[ "$action" == "join" ]]; then
         echo "$target" | sort -r | xargs -I{} tmux move-pane -s {}
     elif [[ "$action" == "break" ]]; then
-        cur_ses=$(tmux display-message -p | sed -e 's/^.//' -e 's/].*//')
+        cur_ses=$(tmux display-message -p $TMUX_FZF_CLIENT_ARG | sed -e 's/^.//' -e 's/].*//')
         last_win_num=$(tmux list-windows | sort -nr | head -1 | sed 's/:.*//')
         ((last_win_num_after = last_win_num + 1))
         tmux break-pane -s "$target" -t "$cur_ses":"$last_win_num_after"
