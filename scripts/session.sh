@@ -10,7 +10,7 @@ else
 fi
 
 if [[ -z "$TMUX_FZF_SWITCH_CURRENT" ]]; then
-    current_session=$(tmux display-message -p | sed -e 's/^\[//' -e 's/\].*//')
+    current_session=$(tmux display-message -p $TMUX_FZF_CLIENT_ARG | sed -e 's/^\[//' -e 's/\].*//')
     sessions=$(echo "$sessions" | grep -v "^$current_session: ")
 fi
 
@@ -43,7 +43,7 @@ if [[ "$action" != "detach" ]]; then
             exit
         fi
         if [[ "$action" == "new" ]]; then
-            tmux new-session -d -s "$session_name" && tmux switch-client -t "$session_name"
+            tmux new-session -d -s "$session_name" && tmux switch-client $TMUX_FZF_CLIENT_ARG -t "$session_name"
             exit
         fi
     fi
@@ -57,7 +57,7 @@ fi
 [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
 target=$(echo "$target_origin" | sed -e 's/:.*$//')
 if [[ "$action" == "switch" ]]; then
-    tmux switch-client -t "$target"
+    tmux switch-client $TMUX_FZF_CLIENT_ARG -t "$target"
 elif [[ "$action" == "detach" ]]; then
     echo "$target" | xargs -I{} tmux detach -s "{}"
 elif [[ "$action" == "kill" ]]; then

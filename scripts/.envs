@@ -45,6 +45,14 @@ else
   [ -z "$TMUX_FZF_OPTIONS" ] && TMUX_FZF_OPTIONS="-m"
 fi
 
+# $TMUX_FZF_CLIENT_ARG
+# Commands executed via "tmux run-shell -b" have no client context, so tmux
+# falls back to the most recently active client - which may be a different
+# terminal when multiple clients are attached. When $TMUX_FZF_CLIENT is set,
+# all client-dependent commands are pinned to that client via -c.
+TMUX_FZF_CLIENT_ARG=""
+[ -n "$TMUX_FZF_CLIENT" ] && TMUX_FZF_CLIENT_ARG="-c $TMUX_FZF_CLIENT"
+
 # Unset temporary variables and functions.
 unset \
   current_dir \

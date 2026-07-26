@@ -7,7 +7,7 @@ source "$CURRENT_DIR/scripts/.envs"
 items_origin="$(echo $TMUX_FZF_ORDER | tr '|' '\n')"
 
 # remove copy-mode from options if we aren't in copy-mode
-if [ "$(tmux display-message -p '#{pane_in_mode}')" -eq 0 ]; then
+if [ "$(tmux display-message -p $TMUX_FZF_CLIENT_ARG '#{pane_in_mode}')" -eq 0 ]; then
     items_origin="$(echo "${items_origin}" | sed '/copy-mode/d')"
 fi
 
@@ -17,4 +17,4 @@ fi
 items_origin+=$'\n[cancel]'
 item=$(echo "${items_origin}" | $TMUX_FZF_BIN $TMUX_FZF_OPTIONS )
 [[ "$item" == "[cancel]" || -z "$item" ]] && exit
-tmux run-shell -b "$CURRENT_DIR/scripts/${item}.sh"
+tmux run-shell -b "TMUX_FZF_CLIENT='$TMUX_FZF_CLIENT' $CURRENT_DIR/scripts/${item}.sh"
