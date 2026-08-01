@@ -63,7 +63,7 @@ else
     [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
     target=$(echo "$target_origin" | sed 's/: .*//')
     if [[ "$action" == "kill" ]]; then
-        echo "$target" | sort -r | xargs -I{} tmux unlink-window -k -t {}
+        echo "$target" | sort -r | while IFS= read -r w; do tmux unlink-window -k -t "$w"; done
     elif [[ "$action" == "rename" ]]; then
         mkfifo /tmp/tmux_fzf_window_name
         tmux split-window -v -l 30% -b "bash -c 'printf \"Window Name: \" && read window_name && echo \"\$window_name\" > /tmp/tmux_fzf_window_name'" &
@@ -81,7 +81,8 @@ else
         target_swap=$(echo "$target_swap_origin" | sed 's/: .*//')
         tmux swap-window -s "$target" -t "$target_swap"
     elif [[ "$action" == "switch" ]]; then
-        echo "$target" | sed 's/:.*//g' | xargs -I{} tmux switch-client $TMUX_FZF_CLIENT_ARG -t {}
-        echo "$target" | xargs -I{} tmux select-window -t {}
+        switch_session=${target%%:*}
+        tmux switch-client $TMUX_FZF_CLIENT_ARG -t "$switch_session"
+        tmux select-window -t "$target"
     fi
 fi
