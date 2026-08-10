@@ -34,6 +34,7 @@ help() {
       -h HEIGHT[%]
       -x COL
       -y ROW
+      -b [single|rounded|double|heavy|simple|padded|none]
 
     Split pane:
       -u [HEIGHT[%]]             Split above (up)
@@ -58,8 +59,8 @@ while [[ $# -gt 0 ]]; do
       echo "fzf-tmux (with fzf $("$fzf" --version))"
       exit
       ;;
-    -p*|-w*|-h*|-x*|-y*|-d*|-u*|-r*|-l*)
-      if [[ "$arg" =~ ^-[pwhxy] ]]; then
+    -p*|-w*|-h*|-x*|-y*|-d*|-u*|-r*|-l*|-b*)
+      if [[ "$arg" =~ ^-[pwhxyb] ]]; then
         [[ "$opt" =~ "-E" ]] || opt="-E"
       elif [[ "$arg" =~ ^.[lr] ]]; then
         opt="-h"
@@ -82,6 +83,9 @@ while [[ $# -gt 0 ]]; do
         if [[ "$1" =~ ^[0-9%,]+$ ]] || [[ "$1" =~ ^[A-Z]$ ]]; then
           size="$1"
           shift
+        elif [[ "$1" =~ ^[a-z]+$ ]]; then
+          border="$1"
+          shift
         else
           continue
         fi
@@ -93,6 +97,8 @@ while [[ $# -gt 0 ]]; do
           h=${size##*,}
           opt="$opt -w$w -h$h"
         fi
+      elif [[ "$arg" =~ ^-b ]]; then
+        : # do nothing
       elif [[ "$arg" =~ ^-[whxy] ]]; then
         opt="$opt ${arg:0:2}$size"
       elif [[ "$size" =~ %$ ]]; then
@@ -202,7 +208,8 @@ if [[ "$opt" =~ "-E" ]]; then
     FZF_DEFAULT_OPTS="--margin 0,1 $FZF_DEFAULT_OPTS"
   elif [[ $tmux_32 = 1 ]]; then
     FZF_DEFAULT_OPTS="--border $FZF_DEFAULT_OPTS"
-    opt="-B $opt"
+    [[ "$border" == "none" ]] && unset border
+    opt="${border:+-b }${border:--B} $opt"
   else
     echo "fzf-tmux: tmux 3.2 or above is required for popup mode" >&2
     exit 2
