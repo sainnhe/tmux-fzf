@@ -4,7 +4,7 @@ CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 [[ -z "$TMUX_FZF_ORDER" ]] && TMUX_FZF_ORDER="copy-mode|session|window|pane|command|keybinding|clipboard|process"
 source "$CURRENT_DIR/scripts/.envs"
 
-items_origin="$(echo $TMUX_FZF_ORDER | tr '|' '\n')"
+items_origin=${TMUX_FZF_ORDER//|/$'\n'}
 
 # remove copy-mode from options if we aren't in copy-mode
 if [ "$(tmux display-message -p $TMUX_FZF_CLIENT_ARG '#{pane_in_mode}')" -eq 0 ]; then

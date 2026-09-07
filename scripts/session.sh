@@ -15,11 +15,7 @@ if [[ -z "$TMUX_FZF_SWITCH_CURRENT" ]]; then
 fi
 
 FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --header='Select an action.'"
-if [[ -z "$1" ]]; then
-    action=$(printf "switch\nnew\nrename\ndetach\nkill\n[cancel]" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")
-else
-    action="$1"
-fi
+action=${1:-$(printf "switch\nnew\nrename\ndetach\nkill\n[cancel]" | eval "$TMUX_FZF_BIN $TMUX_FZF_OPTIONS")}
 
 [[ "$action" == "[cancel]" || -z "$action" ]] && exit
 if [[ "$action" != "detach" ]]; then
@@ -35,6 +31,7 @@ if [[ "$action" != "detach" ]]; then
         target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_session:/")
     fi
     if [[ "$action" == "new" || "$action" == "rename" ]]; then
+        [[ $action == rename ]] && [[ $target_origin == "[cancel]" || -z $target_origin ]] && exit
         mkfifo /tmp/tmux_fzf_session_name
         tmux split-window -v -l 30% -b "bash -c 'printf \"Session Name: \" && read session_name && echo \"\$session_name\" > /tmp/tmux_fzf_session_name'" &
         session_name=$(cat /tmp/tmux_fzf_session_name)
@@ -55,13 +52,18 @@ else
     target_origin=$(echo "$target_origin" | sed -E "s/\[current\]/$current_session:/")
 fi
 [[ "$target_origin" == "[cancel]" || -z "$target_origin" ]] && exit
-target=$(echo "$target_origin" | sed -e 's/:.*$//')
-if [[ "$action" == "switch" ]]; then
+target=${target_origin%%:*}
+case "$action" in
+  switch)
     tmux switch-client $TMUX_FZF_CLIENT_ARG -t "$target"
-elif [[ "$action" == "detach" ]]; then
-    echo "$target" | xargs -I{} tmux detach -s "{}"
-elif [[ "$action" == "kill" ]]; then
-    echo "$target" | sort -r | xargs -I{} tmux kill-session -t "{}"
-elif [[ "$action" == "rename" ]]; then
+    ;;
+  detach)
+    tmux detach -s "$target"
+    ;;
+  kill)
+    tmux kill-session -t "$target"
+    ;;
+  rename)
     tmux rename-session -t "$target" "$session_name"
-fi
+    ;;
+esac
