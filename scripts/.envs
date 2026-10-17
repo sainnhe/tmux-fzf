@@ -13,8 +13,8 @@ compare_float() {
 # $TMUX_FZF_PREVIEW_OPTIONS && $TMUX_FZF_PREVIEW_SESSION_OPTIONS
 TMUX_FZF_PREVIEW_FOLLOW="${TMUX_FZF_PREVIEW_FOLLOW:-1}"
 fzf_version=$(fzf --version)
-fzf_version_1=$(echo "$fzf_version" | grep -o '^[[:digit:]]*\.[[:digit:]]*')
-fzf_version_2=$(echo "$fzf_version" | grep -o '^[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*' | sed 's/[[:digit:]]*\.//')
+fzf_version_1=$(echo "$fzf_version" | grep -oE '[[:digit:]]+\.[[:digit:]]+' | head -n 1)
+fzf_version_2=$(echo "$fzf_version" | grep -oE '[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+' | head -n 1 | sed 's/[[:digit:]]*\.//')
 if [ $(compare_float $fzf_version_1 "0.24") == ">" ] ||
   [ $fzf_version_1 == "0.24" ] &&
   [ $(compare_float $fzf_version_2 "24.3") == ">" ] &&
@@ -32,7 +32,7 @@ fi
 
 # $TMUX_FZF_BIN
 if [ -x "$(command -v fzf-tmux)" ]; then
-  TMUX_FZF_BIN="$(which fzf-tmux)"
+  TMUX_FZF_BIN="$(command -v fzf-tmux)"
 else
   TMUX_FZF_BIN="$current_dir/.fzf-tmux"
 fi
